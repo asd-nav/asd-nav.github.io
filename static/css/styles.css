@@ -1,0 +1,608 @@
+:root {
+    --accent: #1b6ca8;
+    --accent-soft: #e8f2fa;
+    --ink: #1f2d3d;
+    --ink-muted: #5b6b7c;
+    --rule: #e7ecf1;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-padding-top: 60px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Helvetica', 'Noto Sans', sans-serif;
+    font-size: 1.2rem;
+    line-height: 1.62;
+    color: #333;
+    background: #ffffff;
+}
+
+/* Bulma sets an explicit 1rem on .content and most block elements, so the
+   body size alone does not cascade - scale the text blocks directly. */
+.content,
+.content p,
+.content li,
+.section p {
+    font-size: 1.2rem;
+}
+
+
+/* ---------- Hero / publication header ---------- */
+
+.hero {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(1100px 380px at 50% -140px, var(--accent-soft) 0%, rgba(232, 242, 250, 0) 70%),
+        #ffffff;
+    border-bottom: 1px solid var(--rule);
+}
+
+.publication-title {
+    color: var(--ink);
+}
+
+/* Venue badge */
+.publication-venue-badge {
+    display: inline-block;
+    margin-bottom: 18px;
+    padding: 5px 18px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 999px;
+}
+
+.publication-title {
+    font-family: 'Helvetica', sans-serif;
+    overflow-wrap: break-word;
+    hyphens: auto;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.publication-authors {
+    font-family: 'Helvetica', sans-serif;
+}
+
+.publication-authors a {
+    color: hsl(204, 86%, 53%) !important;
+}
+
+.publication-authors a:hover {
+    text-decoration: underline;
+}
+
+.publication-venue {
+    color: #555;
+    width: fit-content;
+    font-weight: bold;
+}
+
+.author-block {
+    display: inline-block;
+}
+
+.link-block a {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/* ---------- Sections ---------- */
+
+/* Flat page: no card framing, so the content is the page rather than a
+   panel sitting on top of a wider background. */
+.section {
+    background: transparent;
+    padding: 10px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Bulma's .container uses negative margins that need side padding to stay
+   inside the viewport once .section padding is reduced. */
+.hero-body,
+.section > .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+/* Widen beyond Bulma's 960px is-max-desktop cap. Combined with the
+   is-four-fifths columns this gives a comfortable ~1000px text measure. */
+.container.is-max-desktop {
+    max-width: 1250px;
+}
+
+.section h2 {
+    color: var(--ink);
+    margin-bottom: 20px;
+    padding-top: 20px;
+    font-size: 2.05rem;
+}
+
+/* Accent rule under each section heading */
+.section h2.title.is-3 {
+    position: relative;
+    padding-bottom: 12px;
+    margin-bottom: 24px;
+}
+
+.section h2.title.is-3::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 54px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--accent);
+}
+
+/* ---------- Figures ---------- */
+
+.method-figure,
+.results-figure {
+    margin: 20px 0;
+}
+
+.method-image,
+.results-image {
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+}
+
+.method-description,
+.results-description {
+    margin-top: 20px;
+}
+
+.figure-caption {
+    margin-top: 12px;
+    font-size: 1.02rem;
+    color: #555;
+    line-height: 1.55;
+}
+
+.teaser-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* ---------- Comparison video grid ---------- */
+
+/* 2 rows x 3 columns */
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, auto);
+    gap: 10px;
+    margin: 18px 0 6px 0;
+}
+
+/* The teaser leads the page, so let it run wider than the text measure. */
+.video-grid.is-teaser {
+    gap: 8px;
+    margin-top: 6px;
+    width: min(1560px, calc(100vw - 48px));
+    margin-left: 50%;
+    transform: translateX(-50%);
+}
+
+@media screen and (max-width: 768px) {
+    .video-grid.is-teaser {
+        width: calc(100vw - 20px);
+    }
+}
+
+.video-item {
+    position: relative;
+    overflow: hidden;
+    background: #000;
+    line-height: 0;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06),
+                0 6px 16px -6px rgba(16, 24, 40, 0.18);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.video-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 2px 4px rgba(16, 24, 40, 0.08),
+                0 14px 28px -10px rgba(16, 24, 40, 0.28);
+}
+
+.video-item video {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.video-tag {
+    position: absolute;
+    left: 8px;
+    bottom: 8px;
+    z-index: 2;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+    color: #fff;
+    background: rgba(17, 24, 39, 0.62);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    padding: 3px 9px;
+    border-radius: 999px;
+    pointer-events: none;
+}
+
+/* Two portrait (9:16) clips side by side - capped so they don't dominate
+   the page vertically. */
+.video-pair {
+    max-width: 620px;
+    margin: 20px auto 6px auto;
+}
+
+@media screen and (max-width: 480px) {
+    .video-pair {
+        gap: 6px !important;
+    }
+}
+
+.video-row-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #6b7785;
+    text-align: left;
+    margin: 22px 0 2px 0;
+}
+
+/* Stays 3x2 at every width - the clips are near-square, so they remain
+   legible when scaled down rather than needing to stack. */
+@media screen and (max-width: 768px) {
+    .video-grid {
+        gap: 5px;
+    }
+
+    .video-tag {
+        font-size: 0.55rem;
+        padding: 2px 6px;
+        left: 5px;
+        bottom: 5px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .video-grid {
+        gap: 3px;
+    }
+
+    .video-item {
+        border-radius: 4px;
+    }
+
+    .video-tag {
+        font-size: 0.46rem;
+        padding: 1px 5px;
+        left: 3px;
+        bottom: 3px;
+    }
+}
+
+/* ---------- Highlight row ---------- */
+
+.highlight-row {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin: 26px 0 6px 0;
+}
+
+.highlight-card {
+    flex: 1 1 200px;
+    max-width: 250px;
+    padding: 20px 16px;
+    background: linear-gradient(180deg, #fbfdff 0%, #f4f8fc 100%);
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--accent);
+    border-radius: 8px;
+    text-align: center;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.highlight-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px -12px rgba(16, 24, 40, 0.3);
+}
+
+.highlight-value {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+}
+
+.highlight-label {
+    font-size: 0.95rem;
+    color: var(--ink-muted);
+    margin-top: 4px;
+}
+
+/* ---------- Tables ---------- */
+
+.results-table-wrapper {
+    overflow-x: auto;
+    margin: 10px 0 6px 0;
+}
+
+table.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1.0rem;
+    background: #fff;
+}
+
+table.results-table th,
+table.results-table td {
+    padding: 8px 6px;
+    text-align: center;
+    border: none;
+}
+
+/* The indoor table carries 11 columns; keep it inside the content width. */
+table.results-table.is-wide {
+    font-size: 0.92rem;
+    table-layout: fixed;
+}
+
+table.results-table.is-wide th,
+table.results-table.is-wide td {
+    padding: 8px 4px;
+}
+
+table.results-table.is-wide th.rowname,
+table.results-table.is-wide td.rowname {
+    width: 17%;
+    white-space: normal;
+}
+
+table.results-table thead tr.group-head th {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #555;
+    border-bottom: 1px solid #dfe3e6;
+}
+
+table.results-table thead tr.col-head th {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #2c3e50;
+    border-bottom: 2px solid #363636;
+    vertical-align: bottom;
+}
+
+table.results-table tbody td {
+    border-bottom: 1px solid #eef1f3;
+}
+
+table.results-table tbody tr.ours {
+    background: var(--accent-soft);
+}
+
+table.results-table tbody tr.ours td {
+    border-top: 2px solid var(--accent);
+    font-weight: 600;
+}
+
+table.results-table tbody tr:not(.ours):hover {
+    background: #fafcfe;
+}
+
+table.results-table th.rowname,
+table.results-table td.rowname {
+    text-align: left;
+    white-space: nowrap;
+}
+
+table.results-table td.best {
+    font-weight: 700;
+    color: #1b6ca8;
+}
+
+table.results-table td.avg,
+table.results-table th.avg {
+    border-left: 1px solid #dfe3e6;
+}
+
+.table-note {
+    font-size: 0.98rem;
+    color: #666;
+    margin-top: 10px;
+    line-height: 1.55;
+}
+
+/* ---------- BibTeX ---------- */
+
+pre {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 0px 0;
+    text-align: left;
+    overflow-x: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: inherit;
+    color: inherit;
+    text-align: left;
+    white-space: pre;
+    display: block;
+}
+
+/* ---------- Sticky navigation ---------- */
+
+.sticky-nav {
+    position: fixed;
+    top: -60px;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: top 0.3s ease;
+}
+
+.sticky-nav.visible {
+    top: 0;
+}
+
+.sticky-nav-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 20px;
+    flex-wrap: wrap;
+}
+
+.sticky-nav-link {
+    color: #555;
+    font-family: 'Helvetica', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 5px 12px;
+    border-radius: 20px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.sticky-nav-link:hover {
+    color: #2c3e50;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.sticky-nav-link.active {
+    color: #2c3e50;
+    background: rgba(44, 62, 80, 0.1);
+    font-weight: 600;
+}
+
+.footer {
+    background-color: transparent;
+    border-top: 1px solid #eceff1;
+    padding: 2.5rem 1.5rem 4rem;
+    margin-top: 3rem;
+}
+
+.footer .icon-link {
+    font-size: 25px;
+    color: #000;
+}
+
+/* ---------- Responsive ---------- */
+
+@media screen and (min-width: 1200px) {
+    .publication-title {
+        font-size: 3rem !important;
+    }
+
+    .title.is-3 {
+        font-size: 2rem !important;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .publication-title {
+        font-size: 1.5rem !important;
+    }
+
+    .is-size-5 {
+        font-size: 0.9rem !important;
+    }
+
+    .title.is-3 {
+        font-size: 1.5rem !important;
+    }
+
+    .button.is-normal {
+        font-size: 0.7rem !important;
+        padding: 0.4rem 0.8rem !important;
+    }
+
+    .sticky-nav-inner {
+        gap: 2px;
+        padding: 8px 10px;
+    }
+
+    .sticky-nav-link {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+    }
+
+    .highlight-value {
+        font-size: 1.6rem;
+    }
+
+    table.results-table {
+        font-size: 0.78rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .publication-title {
+        font-size: 1.2rem !important;
+    }
+
+    .is-size-5 {
+        font-size: 0.8rem !important;
+    }
+
+    .title.is-3 {
+        font-size: 1.2rem !important;
+    }
+
+    .button.is-normal {
+        font-size: 0.65rem !important;
+        padding: 0.3rem 0.6rem !important;
+    }
+
+    .sticky-nav-link {
+        font-size: 0.62rem;
+        padding: 3px 6px;
+    }
+}
