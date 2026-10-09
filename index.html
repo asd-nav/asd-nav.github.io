@@ -13,569 +13,321 @@
     <meta name="twitter:card" content="summary_large_image">
 
     <link rel="icon" type="image/png" href="assets/images/favicon.png">
-    <link rel="shortcut icon" type="image/png" href="assets/images/favicon.png">
 
-    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
-    <link rel="stylesheet" href="static/css/bulma.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-    <link rel="stylesheet" href="static/css/styles.css?v=5">
+    <link rel="stylesheet" href="static/css/styles.css?v=32">
 </head>
 <body>
 
-    <!-- Sticky Navigation -->
-    <nav class="sticky-nav" id="sticky-nav">
-        <div class="sticky-nav-inner">
-            <a href="#summary" class="sticky-nav-link">Summary</a>
-            <a href="#method" class="sticky-nav-link">Method</a>
-            <a href="#steerability" class="sticky-nav-link">Steerability</a>
-            <a href="#multistage" class="sticky-nav-link">Multi-Stage</a>
-            <a href="#results" class="sticky-nav-link">Results</a>
-            <a href="#qualitative" class="sticky-nav-link">Rollouts</a>
-            <a href="#reasoning" class="sticky-nav-link">Reasoning</a>
-            <a href="#bibtex" class="sticky-nav-link">BibTeX</a>
+    <!-- ================= Hero ================= -->
+    <header class="hero">
+        <div class="wrap">
+            <h1 class="title">Training Generalist Navigation Policies via<br><span class="title-accent">Action Self-Distillation</span></h1>
+            <div class="venue">CoRL 2026</div>
+
+            <div class="authors">
+                <span class="author"><a href="https://fengb2-coder.github.io/">Bowen Feng</a><sup>*</sup></span>
+                <span class="author">Keqin Wang<sup>*</sup></span>
+                <span class="author">Yulong Yang<sup>*</sup></span>
+                <span class="author"><a href="https://amogh7joshi.com">Amogh Joshi</a></span>
+                <span class="author"><a href="https://mae.princeton.edu/people/christine-allen-blanchette">Christine Allen-Blanchette</a></span>
+                <span class="author"><a href="https://robodhruv.github.io/">Dhruv Shah</a></span>
+                <span class="author"><a href="https://www.cs.princeton.edu/~fheide/">Felix Heide</a></span>
+            </div>
+            <div class="affil">Princeton University &nbsp;&middot;&nbsp; <sup>*</sup>Equal contribution</div>
+
+            <div class="links">
+                <a class="btn" href="#"><i class="fas fa-file-pdf"></i><span>Paper</span></a>
+                <a class="btn" href="#"><i class="ai ai-arxiv"></i><span>arXiv</span></a>
+                <a class="btn" href="#"><i class="fab fa-github"></i><span>Code</span></a>
+                <a class="btn btn-accent" href="#video"><i class="fas fa-play"></i><span>Video</span></a>
+            </div>
         </div>
-    </nav>
 
-    <!-- Hero -->
-    <section class="hero">
-        <div class="hero-body">
-            <div class="container is-max-desktop">
-                <div class="columns is-centered">
-                    <div class="column has-text-centered">
-                        <h1 class="title is-1 publication-title">Training Generalist Navigation Policies via Action Self-Distillation</h1>
-                        <p style="text-align: center;"><span class="publication-venue-badge">CoRL 2026</span></p>
-                        <div class="is-size-5 publication-authors">
-                            <span class="author-block"><a href="https://fengb2-coder.github.io/">Bowen Feng</a><sup>*</sup>,</span>
-                            <span class="author-block">Keqin Wang<sup>*</sup>,</span>
-                            <span class="author-block">Yulong Yang<sup>*</sup>,</span>
-                            <span class="author-block"><a href="https://amogh7joshi.com">Amogh Joshi</a><sup>*</sup>,</span>
-                            <span class="author-block"><a href="https://mae.princeton.edu/people/christine-allen-blanchette">Christine Allen-Blanchette</a>,</span>
-                            <span class="author-block"><a href="https://robodhruv.github.io/">Dhruv Shah</a>,</span>
-                            <span class="author-block"><a href="https://www.cs.princeton.edu/~fheide/">Felix Heide</a></span>
-                        </div>
-                        <div class="is-size-5 publication-authors" style="margin-top: 6px;">
-                            <span class="author-block">Princeton University</span>
-                        </div>
-                        <div class="is-size-6 publication-authors" style="margin-top: 10px;">
-                            <span class="author-block"><sup>*</sup>Equal Contribution</span>
-                        </div>
+        <!-- Explainer video -->
+        <div class="hero-media" id="video">
+            <div class="explainer">
+                <video controls playsinline preload="metadata" src="assets/video/ASD_full_3m21s.mp4#t=0.1"></video>
+            </div>
+        </div>
 
-                        <div class="column has-text-centered">
-                            <div class="publication-links">
-                                <!-- PDF Link. -->
-                                <span class="link-block">
-                                <a href="#"
-                                   class="external-link button is-normal is-rounded is-dark">
-                                    <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                                    <span>Paper</span>
-                                </a>
-                                </span>
-                                <!-- arXiv Link. -->
-                                <span class="link-block">
-                                <a href="#"
-                                   class="external-link button is-normal is-rounded is-dark">
-                                    <span class="icon"><i class="ai ai-arxiv"></i></span>
-                                    <span>arXiv</span>
-                                </a>
-                                </span>
-                                <!-- Code Link. -->
-                                <span class="link-block">
-                                <a href="#"
-                                   class="external-link button is-normal is-rounded is-dark">
-                                    <span class="icon"><i class="fab fa-github"></i></span>
-                                    <span>Code</span>
-                                </a>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="wrap">
+            <p class="tldr">
+                <b>TL;DR:</b> A VLM teaches itself to navigate from language by explaining recorded demonstrations &mdash;
+                no human goal or reasoning labels needed.
+            </p>
+
+            <div class="highlights">
+                <h2 class="section-title">Highlights</h2>
+                <ol>
+                    <li>
+                        <b>Self-distillation from trajectory-only data.</b> One open-source VLM serves as <span class="hl">both teacher and
+                        student</span>. During training, the teacher sees the demonstrated trajectory and infers the navigation goal
+                        and a reasoning trace. The student learns to produce the same reasoning and trajectory from the camera
+                        image and the goal. <span class="hl">No human-written goals or reasoning traces</span> are used.
+                    </li>
+                    <li>
+                        <b>Steerable navigation with structured reasoning.</b> In the same scene, the policy <span class="hl">reaches different
+                        targets</span> when given different directional, color, or object commands. Each action comes with a short
+                        trace covering perception, prediction, and planning. Training uses about 100 hours of navigation data,
+                        compared with 9,500 hours for OmniVLA.
+                    </li>
+                    <li>
+                        <b>Zero-shot real-world generalization.</b> We evaluate on 13 real-world tasks with a FrodoBot rover.
+                        Although the training data is mostly outdoor, the policy handles <span class="hl">unseen indoor scenes</span> and <span class="hl">multi-stage
+                        instructions</span>. It improves success by 30 percentage points over OmniVLA indoors and over NaVILA on
+                        multi-stage tasks, and reaches 95% success outdoors.
+                    </li>
+                    <li>
+                        <b>Outperforms SFT on frontier-model labels.</b> Fine-tuning on reasoning labels from Claude Opus 5
+                        reaches 36% success on our ablation tasks; self-distillation reaches <span class="hl">80%</span>. On the <i>Left chair</i>
+                        task, ASD finishes in 15 seconds, while prompting Claude Opus 4.7 to drive takes over 14 minutes.
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= Real-world: indoor ================= -->
+    <section class="section section-tint" id="indoor">
+        <div class="wrap">
+            <h2 class="section-title">Real-World Experiment: Indoor</h2>
+            <div class="video-grid">
+                <div class="video-item"><video muted loop playsinline preload="none" data-src="assets/video/indoor_chair_right.mp4" poster="assets/images/posters/indoor_chair_right.jpg"></video></div>
+                <div class="video-item"><video muted loop playsinline preload="none" data-src="assets/video/indoor_monitor.mp4" poster="assets/images/posters/indoor_monitor.jpg"></video></div>
+                <div class="video-item"><video muted loop playsinline preload="none" data-src="assets/video/indoor_chair.mp4" poster="assets/images/posters/indoor_chair.jpg"></video></div>
             </div>
         </div>
     </section>
 
-    <section class="section">
-        <div class="container is-max-desktop">
+    <!-- ================= Real-world: outdoor ================= -->
+    <section class="section" id="outdoor">
+        <div class="wrap">
+            <h2 class="section-title">Real-World Experiment: Outdoor</h2>
+            <div class="video-grid">
+                <div class="video-item"><video muted loop playsinline preload="none" data-src="assets/video/outdoor_statue.mp4" poster="assets/images/posters/outdoor_statue.jpg"></video></div>
+                <div class="video-item"><video muted loop playsinline preload="none" data-src="assets/video/outdoor_car.mp4" poster="assets/images/posters/outdoor_car.jpg"></video></div>
+                <div class="video-item"><video muted loop playsinline preload="none" data-src="assets/video/outdoor_tree.mp4" poster="assets/images/posters/outdoor_tree.jpg"></video></div>
+            </div>
+        </div>
+    </section>
 
-            <!-- Teaser: head-to-head video grid -->
-            <div class="columns is-centered has-text-centered">
-                <div class="column is-full">
-                    <div class="video-grid is-teaser"
-                         style="display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,auto);gap:8px;">
-                        <div class="video-item">
-                            <video autoplay muted loop playsinline preload="auto"
-                                   poster="assets/images/posters/indoor_chair_right.jpg">
-                                <source src="assets/video/indoor_chair_right.mp4" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                            <span class="video-tag">Indoor &middot; right chair</span>
-                        </div>
-                        <div class="video-item">
-                            <video autoplay muted loop playsinline preload="auto"
-                                   poster="assets/images/posters/indoor_chair.jpg">
-                                <source src="assets/video/indoor_chair.mp4" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                            <span class="video-tag">Indoor &middot; chair</span>
-                        </div>
-                        <div class="video-item">
-                            <video autoplay muted loop playsinline preload="auto"
-                                   poster="assets/images/posters/indoor_monitor.jpg">
-                                <source src="assets/video/indoor_monitor.mp4" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                            <span class="video-tag">Indoor &middot; monitor</span>
-                        </div>
-                        <div class="video-item">
-                            <video autoplay muted loop playsinline preload="metadata"
-                                   poster="assets/images/posters/outdoor_statue.jpg">
-                                <source src="assets/video/outdoor_statue.mp4" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                            <span class="video-tag">Outdoor &middot; statue</span>
-                        </div>
-                        <div class="video-item">
-                            <video autoplay muted loop playsinline preload="metadata"
-                                   poster="assets/images/posters/outdoor_tree.jpg">
-                                <source src="assets/video/outdoor_tree.mp4" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                            <span class="video-tag">Outdoor &middot; tree</span>
-                        </div>
-                        <div class="video-item">
-                            <video autoplay muted loop playsinline preload="metadata"
-                                   poster="assets/images/posters/outdoor_car.jpg">
-                                <source src="assets/video/outdoor_car.mp4" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                            <span class="video-tag">Outdoor &middot; red car</span>
-                        </div>
+    <!-- ================= Real-world: multi-stage ================= -->
+    <section class="section section-tint" id="multistage">
+        <div class="wrap">
+            <h2 class="section-title">Real-World Experiment: Multi-Stage</h2>
+            <div class="video-grid video-grid-center">
+                <figure class="video-item portrait">
+                    <video muted loop playsinline preload="none" data-src="assets/video/multistage_hallway.mp4" poster="assets/images/posters/multistage_hallway.jpg"></video>
+                </figure>
+                <figure class="video-item portrait">
+                    <video muted loop playsinline preload="none" data-src="assets/video/multistage_sidewalk.mp4" poster="assets/images/posters/multistage_sidewalk.jpg"></video>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= Steerability (interactive) ================= -->
+    <section class="section" id="steerability">
+        <div class="wrap">
+            <h2 class="section-title">Steerability</h2>
+            <p class="section-sub">Same scene, different prompt &mdash; pick one to see the rollout.</p>
+
+            <div class="steer" id="steer">
+                <div class="steer-controls">
+                    <div class="steer-tabs" role="tablist">
+                        <button class="steer-tab is-active" data-group="object" role="tab" type="button">Object</button>
+                        <button class="steer-tab" data-group="direction" role="tab" type="button">Direction</button>
+                        <button class="steer-tab" data-group="color" role="tab" type="button">Color</button>
+                    </div>
+                    <div class="steer-prompts" id="steer-prompts"></div>
+                </div>
+                <div class="steer-stage">
+                    <video id="steer-video" muted loop playsinline></video>
+                    <div class="placeholder placeholder-fill" id="steer-placeholder" hidden>
+                        <div class="ph-tag">待补素材</div>
+                        <div class="ph-title" id="steer-ph-title"></div>
+                        <div class="ph-body" id="steer-ph-body"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Summary -->
-            <div class="columns is-centered has-text-centered">
-                <div class="column is-four-fifths">
-                    <h2 class="title is-3" id="summary">Summary</h2>
-                    <div class="content has-text-justified">
-                        <p>
-                            Language provides a natural interface for humans to specify and reason about goals, but
-                            training language-conditioned robotic policies and reasoning typically requires expensive
-                            manual annotations. We propose <i>Action Self-Distillation</i> (ASD), a method for learning
-                            language-conditioned reasoning for robotic navigation without human-annotated language or
-                            reasoning labels. ASD uses an open-source VLM, which contains broad world knowledge and
-                            reasoning capabilities, as <em>both</em> a teacher network and a student policy. During
-                            training, the self-teacher receives privileged trajectory feedback and infers the underlying
-                            navigation goal together with goal-oriented reasoning. The student is then trained to
-                            condition on the inferred navigation goal, predict future ego-frame trajectory, and provide
-                            a description of the scene semantics, plan, and reasoning, from onboard observations alone.
-                            Across 13 challenging indoor and outdoor real-world navigation tasks, our method improves
-                            success rate over the strongest baseline by 30% in indoor settings, 30% on multi-stage
-                            tasks, and achieves 95% success rate on outdoor tasks, validating that privileged trajectory
-                            feedback can enable self-distillation for scalable generalist navigation policies without
-                            human annotations.
-                        </p>
-                    </div>
+        </div>
+    </section>
 
-                    <div class="method-figure">
-                        <img src="assets/images/motivation.webp"
-                             alt="Action Self-Distillation overview: the self-teacher receives privileged trajectory feedback while the student observes only deployable inputs."
-                             class="method-image">
+    <!-- ================= Reasoning ================= -->
+    <section class="section section-tint" id="reasoning">
+        <div class="wrap">
+            <h2 class="section-title">Reasoning</h2>
+            <div class="reasoning-grid">
+                <figure class="reasoning-card">
+                    <img src="assets/images/reasoning_chair.webp" loading="lazy" width="450" height="253"
+                         alt="Robot camera view of two chairs, one with a black bag; the predicted path curves right toward it.">
+                    <div class="trace" data-typewriter>
+                        <p><b>Task:</b> Navigate to the <em>chair with a black bag on it</em></p>
+                        <p><b>Perception:</b> The scene shows an indoor office space with carpeted floors and walls. <em>There are two chairs visible, one with a black bag on it.</em> The robot is positioned near the edge of the room, facing towards the chairs.</p>
+                        <p><b>Agents:</b> <em>Two chairs, one with a black bag on it.</em></p>
+                        <p><b>Prediction:</b> The robot is likely stationary or moving slowly, as there are no visible signs of motion or interaction with the environment.</p>
+                        <p><b>Planning:</b> The robot should <em>navigate towards the chair with the black bag</em>. This involves <em>turning slightly to the right</em> to align with the target chair.</p>
+                        <p class="traj"><b>Trajectory:</b> {"future_trajectory": [[0.093, -0.008], [0.461, -0.06], [0.811, -0.172], [1.131, -0.331], [1.429, -0.531], [1.713, -0.74], [2.011, -0.943], [2.31, -1.139], [2.621, -1.331], [2.921, -1.513], [3.221, -1.711], &hellip;]}</p>
                     </div>
-                    <p class="figure-caption has-text-justified">
-                        The self-teacher uses privileged ground-truth trajectory feedback to extract scene semantics,
-                        infer a language goal, and generate reasoning traces explaining the demonstrated behavior. Blue
-                        arrows denote the feedback-conditioned information flow to the self-teacher, while pink arrows
-                        denote the student pathway. The student observes only deployable inputs and learns to align its
-                        reasoning and trajectory tokens with the self-teacher, removing the need for external goal or
-                        reasoning annotations.
-                    </p>
+                </figure>
+                <figure class="reasoning-card">
+                    <img src="assets/images/reasoning_bag.webp" loading="lazy" width="449" height="253"
+                         alt="Robot camera view of a backpack on the left while a person waves a red pool noodle on the right; the predicted path heads to the backpack.">
+                    <div class="trace" data-typewriter>
+                        <p><b>Task:</b> Navigate to the <em>brown bag</em></p>
+                        <p><b>Perception:</b> A white floor with a few scattered objects, <em>including a backpack and a red object.</em> The scene appears to be indoors, possibly in a laboratory or office setting. <em>The backpack is positioned near the bottom left of the image, and the red object is closer to the center-right.</em></p>
+                        <p><b>Agents:</b> A backpack and a red object are visible on the floor.</p>
+                        <p><b>Prediction:</b> The backpack is likely stationary, as it is not moving. <em>The red object might be moving slightly,</em> but its motion is unclear due to the limited frame.</p>
+                        <p><b>Planning:</b> <em>The robot should navigate towards the backpack. The backpack is clearly visible and located near the bottom left of the image.</em> Maintaining direction keeps the robot centered on the path leading to the backpack.</p>
+                        <p class="traj"><b>Trajectory:</b> {"future_trajectory": [[0.038, -0.009], [0.187, -0.041], [0.327, -0.066], [0.458, -0.081], [0.58, -0.084], [0.695, -0.074], [0.805, -0.05], [0.912, -0.02], [1.017, 0.041], [1.122, 0.107], [1.228, 0.186], &hellip;]}</p>
+                    </div>
+                </figure>
+            </div>
+        </div>
+    </section>
 
-                    <div class="highlight-row">
-                        <div class="highlight-card">
-                            <div class="highlight-value">84%</div>
-                            <div class="highlight-label">Avg. success, 9 indoor tasks<br>(+30% over OmniVLA)</div>
-                        </div>
-                        <div class="highlight-card">
-                            <div class="highlight-value">95%</div>
-                            <div class="highlight-label">Avg. success, 4 outdoor tasks</div>
-                        </div>
-                        <div class="highlight-card">
-                            <div class="highlight-value">Zero</div>
-                            <div class="highlight-label">Human goal or reasoning<br>annotations required</div>
-                        </div>
-                    </div>
-                </div>
+    <!-- ================= Quantitative results ================= -->
+    <section class="section" id="results">
+        <div class="wrap">
+            <h2 class="section-title">Results</h2>
+
+            <div class="legend" id="legend"></div>
+
+            <div class="chart-card">
+                <div class="chart-title">Success Rate</div>
+                <div class="chart" id="chart-summary"></div>
             </div>
 
-            <!-- Method -->
-            <div class="columns is-centered has-text-centered">
-                <div class="column is-four-fifths">
-                    <h2 class="title is-3" id="method">Action Self-Distillation</h2>
-                    <div class="content has-text-justified method-description">
-                        <p>
-                            ASD turns trajectory-only navigation data into goal-conditioned reasoning supervision using
-                            a single pretrained VLM in two roles. In the self-teacher pass, the ground-truth
-                            future trajectory is projected as a polyline overlay onto the front-view observation. This
-                            privileged feedback lets the model infer the language goal that explains the demonstrated
-                            behavior, along with a structured reasoning trace. In the student pass, the same
-                            model sees only deployable onboard inputs and is trained to condition on that inferred goal
-                            while predicting both the reasoning trace and the future ego-frame trajectory.
-                        </p>
-                        <p>
-                            Reasoning tokens are supervised by a KL divergence against the self-teacher's logits, and
-                            trajectory tokens by cross-entropy against the ground-truth trajectory. The self-teacher is
-                            an exponential moving average of the student, so all language supervision is generated
-                            inside the training loop &mdash; no human-written goals or reasoning traces are ever used.
-                            At deployment the teacher and the privileged trajectory are removed entirely, and a human
-                            operator supplies a free-form language goal in place of the inferred one.
-                        </p>
-                    </div>
-                    <div class="method-figure">
-                        <img src="assets/images/method.webp"
-                             alt="ASD training pipeline: a self-teacher VLM conditioned on privileged trajectory feedback supervises a student VLM through KL and cross-entropy losses."
-                             class="method-image">
-                    </div>
-                </div>
+            <div class="chart-card">
+                <div class="chart-title">Ablation</div>
+                <div class="chart" id="chart-ablation"></div>
             </div>
 
-            <!-- Steerability -->
-            <div class="columns is-centered has-text-centered">
-                <div class="column is-four-fifths">
-                    <h2 class="title is-3" id="steerability">Language Steerability</h2>
-                    <div class="content has-text-justified results-description">
-                        <p>
-                            Within a single fixed environment, ASD produces distinct trajectories depending on the
-                            language goal &mdash; following directional commands, grounding different object
-                            categories, and distinguishing object attributes such as color. This is notable because
-                            training uses one-to-one scene-goal supervision: each observation is paired with a single
-                            language goal and a single demonstrated trajectory, with no counterfactual trajectory
-                            augmentation. By contrast, methods such as OmniVLA rely on broader multimodal training with
-                            over 9,500 hours of data collected across 10 platforms.
-                        </p>
-                    </div>
-                    <div class="results-figure">
-                        <img src="assets/images/steerability.webp"
-                             alt="Steerability: the same scene produces different robot trajectories under color, direction, and object prompts."
-                             class="results-image">
-                    </div>
-                    <p class="figure-caption has-text-justified">
-                        <b>Steerability demonstration.</b> ASD under color (left), direction (middle), and object
-                        (right) prompts. Within the same environment, the policy can be directed to different targets.
-                    </p>
+
+            <details class="tables">
+                <summary>Full result tables</summary>
+
+                <h4>Indoor language-conditioned navigation</h4>
+                <div class="table-wrap">
+                    <table class="results-table">
+                        <thead>
+                            <tr class="group-head">
+                                <th></th><th colspan="3">Directions</th><th colspan="4">Objects</th><th colspan="2">Multi-stage</th><th></th>
+                            </tr>
+                            <tr>
+                                <th class="rowname">Method</th>
+                                <th>Straight door<sup>&minus;</sup></th><th>Left chair<sup>+</sup></th><th>Right chair<sup>*</sup></th>
+                                <th>Blue chair<sup>&minus;</sup></th><th>Trash bin<sup>&minus;</sup></th><th>Chair<sup>+</sup></th><th>Monitor<sup>*</sup></th>
+                                <th>Doorway<sup>+</sup></th><th>Hallway<sup>*</sup></th><th class="avg">Avg.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="rowname">OmniVLA</td><td>0.8</td><td>0.9</td><td>0.2</td><td>0.7</td><td>1.0</td><td>0.4</td><td>0.2</td><td>0.7</td><td>0.0</td><td class="avg">0.54</td></tr>
+                            <tr><td class="rowname">NaVILA</td><td>0.3</td><td>0.2</td><td>0.1</td><td>0.4</td><td>0.1</td><td>0.3</td><td>0.2</td><td>0.3</td><td>0.5</td><td class="avg">0.27</td></tr>
+                            <tr class="ours"><td class="rowname">Qwen2.5-VL-ASD</td><td>0.9</td><td>1.0</td><td>0.8</td><td>1.0</td><td>0.9</td><td>0.9</td><td>0.7</td><td>0.8</td><td>0.6</td><td class="avg">0.84</td></tr>
+                            <tr class="ours"><td class="rowname">Qwen3.5-VL-ASD</td><td>1.0</td><td>1.0</td><td>0.9</td><td>1.0</td><td>1.0</td><td>1.0</td><td>0.9</td><td>0.9</td><td>0.8</td><td class="avg">0.94</td></tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
 
-            <!-- Multi-stage -->
-            <div class="columns is-centered has-text-centered">
-                <div class="column is-four-fifths">
-                    <h2 class="title is-3" id="multistage">Multi-Stage Navigation</h2>
-                    <div class="content has-text-justified results-description">
-                        <p>
-                            ASD executes compound goals that decompose into several sequential sub-tasks. On the
-                            two-stage <code>Doorway</code> task the policy reaches 80% success, and on the four-stage
-                            <code>Hallway</code> task &mdash; navigate to the door, pass through it, turn right, then
-                            follow the hallway &mdash; it reaches 60%. OmniVLA fails the longer task entirely at 0%,
-                            while NaVILA reaches only 30% on the shorter one.
-                        </p>
-                    </div>
-                    <div class="video-pair"
-                         style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
-                        <div class="video-item">
-                            <video autoplay muted loop playsinline preload="metadata"
-                                   poster="assets/images/posters/multistage_hallway.jpg">
-                                <source src="assets/video/multistage_hallway.mp4" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                        </div>
-                        <div class="video-item">
-                            <video autoplay muted loop playsinline preload="metadata"
-                                   poster="assets/images/posters/multistage_sidewalk.jpg">
-                                <source src="assets/video/multistage_sidewalk.mp4" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                        </div>
-                    </div>
+                <h4>Outdoor language-conditioned navigation</h4>
+                <div class="table-wrap">
+                    <table class="results-table">
+                        <thead>
+                            <tr><th class="rowname">Method</th><th>Sidewalk</th><th>Statue</th><th>Tree</th><th>Car</th><th class="avg">Avg.</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="rowname">OmniVLA</td><td>1.0</td><td>0.6</td><td>1.0</td><td>1.0</td><td class="avg">0.90</td></tr>
+                            <tr><td class="rowname">NaVILA</td><td>0.9</td><td>0.1</td><td>0.0</td><td>0.3</td><td class="avg">0.33</td></tr>
+                            <tr class="ours"><td class="rowname">Qwen2.5-VL-ASD</td><td>1.0</td><td>0.8</td><td>1.0</td><td>1.0</td><td class="avg">0.95</td></tr>
+                            <tr class="ours"><td class="rowname">Qwen3.5-VL-ASD</td><td>1.0</td><td>0.9</td><td>1.0</td><td>1.0</td><td class="avg">0.98</td></tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
 
-            <!-- Results -->
-            <div class="columns is-centered has-text-centered">
-                <div class="column is-four-fifths">
-                    <h2 class="title is-3" id="results">Real-World Results</h2>
-                    <div class="content has-text-justified results-description">
-                        <p>
-                            We deploy ASD zero-shot on a FrodoBot EarthRover Mini with a single front-facing camera.
-                            The policy uses Qwen2.5-3B as its base VLM and is trained on a mixture of RECON and
-                            FrodoBots-2K &mdash; both primarily <em>outdoor</em> datasets with no language annotations.
-                            Every indoor result below is therefore an out-of-distribution transfer.
-                        </p>
-                    </div>
-
-                    <h3 class="title is-5" style="margin-top: 10px;">Indoor Language-Conditioned Navigation</h3>
-                    <div class="results-table-wrapper">
-                        <table class="results-table is-wide">
-                            <thead>
-                                <tr class="group-head">
-                                    <th class="rowname"></th>
-                                    <th colspan="3">Directions</th>
-                                    <th colspan="4">Objects</th>
-                                    <th colspan="2">Multi-stage</th>
-                                    <th class="avg"></th>
-                                </tr>
-                                <tr class="col-head">
-                                    <th class="rowname">Method</th>
-                                    <th>Straight<br>door<sup>&minus;</sup></th>
-                                    <th>Left<br>chair<sup>+</sup></th>
-                                    <th>Right<br>chair<sup>*</sup></th>
-                                    <th>Blue<br>chair<sup>&minus;</sup></th>
-                                    <th>Trash<br>bin<sup>&minus;</sup></th>
-                                    <th>Chair<sup>+</sup></th>
-                                    <th>Monitor<sup>*</sup></th>
-                                    <th>Doorway<sup>+</sup></th>
-                                    <th>Hallway<sup>*</sup></th>
-                                    <th class="avg">Avg.</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="rowname">OmniVLA</td>
-                                    <td>0.8</td><td>0.9</td><td>0.2</td>
-                                    <td>0.7</td><td class="best">1.0</td><td>0.4</td><td>0.2</td>
-                                    <td>0.7</td><td>0.0</td>
-                                    <td class="avg">0.54</td>
-                                </tr>
-                                <tr>
-                                    <td class="rowname">NaVILA</td>
-                                    <td>0.3</td><td>0.2</td><td>0.1</td>
-                                    <td>0.4</td><td>0.1</td><td>0.3</td><td>0.2</td>
-                                    <td>0.3</td><td>0.5</td>
-                                    <td class="avg">0.27</td>
-                                </tr>
-                                <tr class="ours">
-                                    <td class="rowname">Qwen2.5-ASD (ours)</td>
-                                    <td class="best">0.9</td><td class="best">1.0</td><td class="best">0.8</td>
-                                    <td class="best">1.0</td><td>0.9</td><td class="best">0.9</td><td class="best">0.7</td>
-                                    <td class="best">0.8</td><td class="best">0.6</td>
-                                    <td class="avg best">0.84</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p class="table-note has-text-justified">
-                        Success rates over four initializations per task, varying the starting position and orientation
-                        of the robot and objects. <sup>&minus;</sup>, <sup>+</sup>, and <sup>*</sup> denote easy,
-                        medium, and hard tasks. Difficulty increases with the number of candidate directions for
-                        directional tasks and the number of objects in the scene for object-centric tasks. On the three
-                        hard tasks, ASD outperforms the leading baseline by 60%, 50%, and 10% respectively.
-                    </p>
-
-                    <h3 class="title is-5" style="margin-top: 26px;">Outdoor Language-Conditioned Navigation</h3>
-                    <div class="results-table-wrapper">
-                        <table class="results-table">
-                            <thead>
-                                <tr class="col-head">
-                                    <th class="rowname">Method</th>
-                                    <th>Sidewalk</th>
-                                    <th>Statue</th>
-                                    <th>Tree</th>
-                                    <th>Car</th>
-                                    <th class="avg">Avg.</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="rowname">OmniVLA</td>
-                                    <td class="best">1.0</td><td>0.6</td><td class="best">1.0</td><td class="best">1.0</td>
-                                    <td class="avg">0.90</td>
-                                </tr>
-                                <tr>
-                                    <td class="rowname">NaVILA</td>
-                                    <td>0.9</td><td>0.1</td><td>0.0</td><td>0.3</td>
-                                    <td class="avg">0.33</td>
-                                </tr>
-                                <tr class="ours">
-                                    <td class="rowname">Qwen2.5-ASD (ours)</td>
-                                    <td class="best">1.0</td><td class="best">0.8</td><td class="best">1.0</td><td class="best">1.0</td>
-                                    <td class="avg best">0.95</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p class="table-note has-text-justified">
-                        Campus environment, four tasks. <code>Statue</code> requires grounding an out-of-distribution
-                        object category, where ASD outperforms OmniVLA by 20% and NaVILA by 70%.
-                    </p>
-
-                    <h3 class="title is-5" style="margin-top: 26px;">Comparison to Foundation Models</h3>
-                    <div class="results-table-wrapper">
-                        <table class="results-table">
-                            <thead>
-                                <tr class="col-head">
-                                    <th class="rowname">Method</th>
-                                    <th>Success rate &uarr;</th>
-                                    <th>Completion time (s) &darr;</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="rowname">OmniVLA</td><td>0.9</td><td>25.3</td>
-                                </tr>
-                                <tr>
-                                    <td class="rowname">NaVILA</td><td>0.2</td><td>28.9</td>
-                                </tr>
-                                <tr>
-                                    <td class="rowname">Qwen2.5-3B</td><td>0.0</td><td>&mdash;</td>
-                                </tr>
-                                <tr>
-                                    <td class="rowname">Claude Opus 4.7</td><td>0.7</td><td>846.1</td>
-                                </tr>
-                                <tr class="ours">
-                                    <td class="rowname">Qwen2.5-ASD (ours)</td>
-                                    <td class="best">1.0</td><td class="best">15.3</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p class="table-note has-text-justified">
-                        Zero-shot evaluation on the <code>Left chair</code> task. Vanilla Qwen2.5-3B produces
-                        degenerate, physically infeasible trajectories, so its completion time is omitted. Claude Opus
-                        4.7 reasons plausibly and identifies targets correctly, but its per-step inference latency
-                        makes the resulting completion time impractical for closed-loop control.
-                    </p>
+                <h4>Foundation models (Left chair task)</h4>
+                <div class="table-wrap">
+                    <table class="results-table narrow">
+                        <thead>
+                            <tr><th class="rowname">Method</th><th>Success &uarr;</th><th>Completion time (s) &darr;</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="rowname">OmniVLA</td><td>0.9</td><td>25.3</td></tr>
+                            <tr><td class="rowname">NaVILA</td><td>0.2</td><td>28.9</td></tr>
+                            <tr><td class="rowname">Qwen2.5-VL (vanilla)</td><td>0.0</td><td>&mdash;</td></tr>
+                            <tr><td class="rowname">Claude Opus 4.7</td><td>0.7</td><td>846.1</td></tr>
+                            <tr class="ours"><td class="rowname">Qwen2.5-VL-ASD</td><td>1.0</td><td>15.3</td></tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
 
-            <!-- Qualitative filmstrip -->
-            <div class="columns is-centered has-text-centered">
-                <div class="column is-four-fifths">
-                    <h2 class="title is-3" id="qualitative">Single-Stage Navigation</h2>
-                    <div class="results-figure">
-                        <img src="assets/images/filmstrip.webp"
-                             alt="Filmstrips of single-stage indoor and outdoor navigation rollouts."
-                             class="results-image">
-                    </div>
-                    <p class="figure-caption has-text-justified">
-                        <b>Single-stage navigation across diverse indoor and outdoor environments.</b> Ordered left to
-                        right: two indoor tasks (<code>right chair</code> and <code>monitor</code>) and three outdoor
-                        tasks (<code>car</code>, <code>statue</code>, and <code>tree</code>).
-                    </p>
+                <h4>Ablations</h4>
+                <div class="table-wrap">
+                    <table class="results-table">
+                        <thead>
+                            <tr><th class="rowname">Method</th><th>Right chair</th><th>Chair</th><th>Monitor</th><th>Hallway</th><th>Car</th><th class="avg">Avg.</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="rowname">ASD, goal-only supervision</td><td>0.4</td><td>0.2</td><td>0.2</td><td>0.1</td><td>0.4</td><td class="avg">0.26</td></tr>
+                            <tr><td class="rowname">ASD, reasoning off at inference</td><td>0.1</td><td>0.2</td><td>0.2</td><td>0.0</td><td>0.2</td><td class="avg">0.14</td></tr>
+                            <tr><td class="rowname">Claude Opus 5 labels + SFT</td><td>0.3</td><td>0.5</td><td>0.3</td><td>0.3</td><td>0.4</td><td class="avg">0.36</td></tr>
+                            <tr><td class="rowname">Qwen2.5-VL labels + SFT</td><td>0.4</td><td>0.3</td><td>0.3</td><td>0.0</td><td>0.1</td><td class="avg">0.22</td></tr>
+                            <tr><td class="rowname">NaVILA (RECON + FrodoBots-2K SFT)</td><td>0.0</td><td>0.1</td><td>0.2</td><td>0.3</td><td>0.2</td><td class="avg">0.16</td></tr>
+                            <tr class="ours"><td class="rowname">Qwen2.5-VL-ASD</td><td>0.8</td><td>0.9</td><td>0.7</td><td>0.6</td><td>1.0</td><td class="avg">0.80</td></tr>
+                            <tr class="ours"><td class="rowname">Qwen3.5-VL-ASD</td><td>0.9</td><td>1.0</td><td>0.9</td><td>0.8</td><td>1.0</td><td class="avg">0.92</td></tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
 
-            <!-- Reasoning -->
-            <div class="columns is-centered has-text-centered">
-                <div class="column is-four-fifths">
-                    <h2 class="title is-3" id="reasoning">Reasoning Legibility</h2>
-                    <div class="content has-text-justified results-description">
-                        <p>
-                            The self-teacher prompt enforces a fixed output structure &mdash; <i>Task</i>,
-                            <i>Perception</i>, <i>Agents</i>, <i>Prediction</i>, and <i>Planning</i> &mdash; followed by
-                            the executable trajectory, which constrains the model to ground its reasoning in observable
-                            scene content. The resulting traces align with both the goal and the predicted trajectory.
-                            On the left, instructed to navigate to the chair with a black bag, the model reasons to turn
-                            right toward the target. On the right, despite a person waving a red pool noodle as a visual
-                            distractor, ASD retains the correct goal &mdash; the brown bag &mdash; and predicts a
-                            reasonable trajectory.
-                        </p>
-                    </div>
-                    <div class="results-figure">
-                        <img src="assets/images/reasoning.webp"
-                             alt="Predicted trajectories shown alongside their structured reasoning traces."
-                             class="results-image">
-                    </div>
-                    <p class="figure-caption has-text-justified">
-                        <b>Reasoning legibility.</b> Representative findings from our real-world experiments, showing
-                        predicted trajectories alongside the corresponding highlighted reasoning traces.
-                    </p>
+                <h4>Open-loop trajectory prediction (2 s horizon, lower is better)</h4>
+                <div class="table-wrap">
+                    <table class="results-table">
+                        <thead>
+                            <tr class="group-head"><th></th><th colspan="4">RECON</th><th colspan="4">FrodoBots-2K</th></tr>
+                            <tr><th class="rowname">Method</th><th>ADE</th><th>ATE</th><th>MAE</th><th>MSE</th><th>ADE</th><th>ATE</th><th>MAE</th><th>MSE</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="rowname">Gaussian Policy</td><td>0.226</td><td>0.321</td><td>0.144</td><td>0.059</td><td>0.034</td><td>0.046</td><td>0.019</td><td>0.002</td></tr>
+                            <tr><td class="rowname">Gaussian Mixture</td><td>0.260</td><td>0.364</td><td>0.166</td><td>0.084</td><td>0.036</td><td>0.050</td><td>0.020</td><td>0.002</td></tr>
+                            <tr><td class="rowname">Diffusion Policy</td><td>0.180</td><td>0.238</td><td>0.108</td><td>0.045</td><td>0.034</td><td>0.045</td><td>0.020</td><td>0.003</td></tr>
+                            <tr><td class="rowname">Qwen2.5-VL + SFT</td><td>0.192</td><td>0.247</td><td>0.115</td><td>0.042</td><td>0.064</td><td>0.061</td><td>0.027</td><td>0.007</td></tr>
+                            <tr><td class="rowname">Alpamayo-1 + SFT</td><td>0.303</td><td>0.362</td><td>0.188</td><td>0.091</td><td>0.093</td><td>0.106</td><td>0.055</td><td>0.041</td></tr>
+                            <tr><td class="rowname">OpenVLA + SFT</td><td>0.341</td><td>0.417</td><td>0.208</td><td>0.114</td><td>0.246</td><td>0.269</td><td>0.138</td><td>0.072</td></tr>
+                            <tr class="ours"><td class="rowname">Qwen2.5-VL-ASD</td><td>0.174</td><td>0.227</td><td>0.104</td><td>0.037</td><td>0.031</td><td>0.042</td><td>0.017</td><td>0.004</td></tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
+            </details>
+        </div>
+    </section>
 
-            <!-- Limitations -->
-            <div class="columns is-centered has-text-centered">
-                <div class="column is-four-fifths">
-                    <h2 class="title is-3" id="limitations">Limitations</h2>
-                    <div class="content has-text-justified">
-                        <p>
-                            While ASD removes the need for language annotations, it still relies on demonstration
-                            trajectories as privileged feedback; future work could replace these with interactive human
-                            feedback for more precise task-level guidance. The quality of self-generated goals and
-                            reasoning also depends on the pretrained VLM, and may degrade in ambiguous scenes, with
-                            small targets, or under fine-grained spatial instructions.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- BibTeX -->
-            <div class="columns is-centered">
-                <div class="column is-four-fifths">
-                    <h2 class="title is-3 has-text-centered" id="bibtex">BibTeX</h2>
-<pre><code>@inproceedings{feng2026asd,
+    <!-- ================= Limitations + BibTeX ================= -->
+    <section class="section section-tint" id="bibtex">
+        <div class="wrap">
+            <h2 class="section-title">BibTeX</h2>
+            <div class="bibtex">
+                <button class="copy-btn" id="copy-bib" type="button"><i class="far fa-copy"></i> <span>Copy</span></button>
+<pre><code id="bib">@inproceedings{feng2026asd,
     title     = {Training Generalist Navigation Policies via Action Self-Distillation},
     author    = {Feng, Bowen and Wang, Keqin and Yang, Yulong and Joshi, Amogh
                  and Allen-Blanchette, Christine and Shah, Dhruv and Heide, Felix},
     booktitle = {Conference on Robot Learning (CoRL)},
     year      = {2026},
 }</code></pre>
-                </div>
             </div>
-
         </div>
     </section>
 
     <footer class="footer">
-        <div class="container">
-            <div class="columns is-centered">
-                <div class="column is-8">
-                    <div class="content has-text-centered">
-                        <p>
-                            Website template borrowed from
-                            <a href="https://nerfies.github.io">Nerfies</a>.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div class="wrap">Website template adapted from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.</div>
     </footer>
 
-    <script>
-    (function () {
-        const nav = document.getElementById('sticky-nav');
-        const links = Array.from(nav.querySelectorAll('.sticky-nav-link'));
-        const sections = links
-            .map(l => document.getElementById(l.getAttribute('href').slice(1)))
-            .filter(Boolean);
-        const hero = document.querySelector('.hero');
-
-        function update() {
-            // Reveal the nav once the hero has scrolled past.
-            const past = window.scrollY > (hero ? hero.offsetHeight - 60 : 200);
-            nav.classList.toggle('visible', past);
-
-            // Highlight the section currently nearest the top of the viewport.
-            let current = null;
-            for (const sec of sections) {
-                if (sec.getBoundingClientRect().top <= 80) current = sec.id;
-            }
-            links.forEach(l => {
-                l.classList.toggle('active', l.getAttribute('href') === '#' + current);
-            });
-        }
-
-        let ticking = false;
-        window.addEventListener('scroll', () => {
-            if (ticking) return;
-            ticking = true;
-            window.requestAnimationFrame(() => { update(); ticking = false; });
-        }, { passive: true });
-
-        window.addEventListener('resize', update, { passive: true });
-        update();
-    })();
-    </script>
-
+    <script src="static/js/main.js?v=10"></script>
 </body>
 </html>

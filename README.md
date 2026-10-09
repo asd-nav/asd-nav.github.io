@@ -22,19 +22,23 @@ Then open <http://localhost:8000>.
 ```
 index.html              the entire page (single file)
 static/css/styles.css   custom styles
-static/css/bulma.min.css
+static/js/main.js       lazy video loading, steerability selector, charts, typewriter
 assets/images/          figures (webp) + video poster frames
-assets/video/           encoded clips (h.264, faststart)
+assets/video/           encoded clips (h.264, faststart), incl. the explainer video
+assets/video/steer/     steerability rollouts, <group>_<target>.mp4 (720x810)
 ```
 
-Two stylesheets load from CDNs (Font Awesome, Academicons) for the link-button
-icons; everything else is vendored.
+Result charts are drawn from the data arrays at the top of the charts block in
+`static/js/main.js`; the full tables in `index.html` must be kept in sync by hand.
+
+Fonts (Inter, JetBrains Mono) and two icon stylesheets (Font Awesome,
+Academicons) load from CDNs; everything else is vendored.
 
 ## Editing
 
 `index.html` is hand-written — edit it directly. If you change
-`static/css/styles.css`, bump the `?v=N` query on its `<link>` tag in
-`index.html` so browsers don't serve a stale cached copy.
+`static/css/styles.css` or `static/js/main.js`, bump the `?v=N` query on its
+tag in `index.html` so browsers don't serve a stale cached copy.
 
 ## Assets
 
