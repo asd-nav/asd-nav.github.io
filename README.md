@@ -26,14 +26,20 @@ limitation of the local server only; GitHub Pages serves it normally.
 ```
 index.html              the entire page (single file)
 static/css/styles.css   custom styles
-static/js/main.js       lazy video loading, steerability selector, charts, typewriter
+static/js/main.js       nav, lazy/autoplay videos, wall filter, method explainer,
+                        steerability crossfade, charts, typewriter, scroll reveal
 assets/images/          figures (webp) + video poster frames
 assets/video/           encoded clips (h.264, faststart), incl. the explainer video
 assets/video/steer/     steerability rollouts, <group>_<target>.mp4
 ```
 
-Page order: hero (explainer video, TL;DR, highlights) → Indoor → Outdoor →
-Multi-Stage → Steerability → Reasoning → Results → BibTeX.
+Page order: dark hero (title, authors, links; muted background clip) →
+Real-World video wall (all indoor / outdoor / multi-stage clips, filterable,
+plus rollout composites) → overview (explainer video, TL;DR, headline stats,
+highlights) → Method (animated teacher → student → deploy explainer, then the
+static figures) → Steerability → Reasoning → Results → BibTeX. A sticky nav
+bar appears once the hero is scrolled past. The page follows the system
+light/dark setting; the hero, video wall and method sections are always dark.
 
 Result charts are drawn from the data arrays at the top of the charts block in
 `static/js/main.js`; the full tables in `index.html` must be kept in sync by hand.

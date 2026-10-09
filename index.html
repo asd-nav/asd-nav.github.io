@@ -6,6 +6,8 @@
     <title>Training Generalist Navigation Policies via Action Self-Distillation</title>
 
     <meta name="description" content="Action Self-Distillation (ASD) learns language-conditioned navigation reasoning without any human-annotated language or reasoning labels.">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#0b0b0c">
     <meta property="og:title" content="Training Generalist Navigation Policies via Action Self-Distillation">
     <meta property="og:description" content="Action Self-Distillation (ASD) learns language-conditioned navigation reasoning without any human-annotated language or reasoning labels.">
     <meta property="og:image" content="assets/images/motivation.webp">
@@ -19,150 +21,388 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-    <link rel="stylesheet" href="static/css/styles.css?v=32">
+    <link rel="stylesheet" href="static/css/styles.css?v=41">
 </head>
-<body>
+<body id="top">
 
-    <!-- ================= Hero ================= -->
-    <header class="hero">
-        <div class="wrap">
-            <h1 class="title">Training Generalist Navigation Policies via<br><span class="title-accent">Action Self-Distillation</span></h1>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <!-- ================= Sticky nav (slides in once the hero is scrolled past) ================= -->
+    <nav class="topnav" id="topnav" aria-label="Sections">
+        <div class="topnav-inner">
+            <a class="topnav-brand" href="#top" aria-label="Back to top"><span class="brand-dot" aria-hidden="true"></span>ASD</a>
+            <ul class="topnav-links">
+                <li><a href="#real-world">Real-World</a></li>
+                <li><a href="#video">Video</a></li>
+                <li><a href="#method">Method</a></li>
+                <li><a href="#steerability">Steerability</a></li>
+                <li><a href="#reasoning">Reasoning</a></li>
+                <li><a href="#results">Results</a></li>
+                <li><a href="#bibtex">BibTeX</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ================= Hero (dark, ambient background clip) ================= -->
+    <header class="hero" id="hero">
+        <!-- Background clip: main.js loads it (skipped under reduced motion / Save-Data, so only the poster shows). -->
+        <div class="hero-bg" aria-hidden="true">
+            <video class="hero-bg-video" muted loop playsinline preload="none" tabindex="-1"
+                   poster="assets/images/posters/steer_direction_middle.jpg"
+                   data-bg-src="assets/video/steer/direction_middle.mp4"></video>
+        </div>
+        <div class="hero-overlay" aria-hidden="true"></div>
+
+        <div class="wrap hero-content">
             <div class="venue">CoRL 2026</div>
+            <h1 class="title">Training Generalist Navigation Policies via<br><span class="title-accent">Action Self-Distillation</span></h1>
 
             <div class="authors">
-                <span class="author"><a href="https://fengb2-coder.github.io/">Bowen Feng</a><sup>*</sup></span>
-                <span class="author">Keqin Wang<sup>*</sup></span>
-                <span class="author">Yulong Yang<sup>*</sup></span>
+                <span class="author"><a href="https://fengb2-coder.github.io/">Bowen Feng</a><sup>&dagger;</sup></span>
+                <span class="author">Keqin Wang<sup>&dagger;</sup></span>
+                <span class="author">Yulong Yang<sup>&dagger;</sup></span>
                 <span class="author"><a href="https://amogh7joshi.com">Amogh Joshi</a></span>
-                <span class="author"><a href="https://mae.princeton.edu/people/christine-allen-blanchette">Christine Allen-Blanchette</a></span>
-                <span class="author"><a href="https://robodhruv.github.io/">Dhruv Shah</a></span>
-                <span class="author"><a href="https://www.cs.princeton.edu/~fheide/">Felix Heide</a></span>
             </div>
-            <div class="affil">Princeton University &nbsp;&middot;&nbsp; <sup>*</sup>Equal contribution</div>
+            <div class="authors authors-2">
+                <span class="author"><a href="https://mae.princeton.edu/people/christine-allen-blanchette">Christine Allen-Blanchette</a></span>
+                <span class="author"><a href="https://robodhruv.github.io/">Dhruv Shah</a><sup>&Dagger;</sup></span>
+                <span class="author"><a href="https://www.cs.princeton.edu/~fheide/">Felix Heide</a><sup>&Dagger;</sup></span>
+            </div>
+            <div class="affil">Princeton University, USA</div>
+            <div class="affil affil-notes"><sup>&dagger;</sup>Equal contribution &nbsp;&middot;&nbsp; <sup>&Dagger;</sup>Joint supervision</div>
 
             <div class="links">
-                <a class="btn" href="#"><i class="fas fa-file-pdf"></i><span>Paper</span></a>
-                <a class="btn" href="#"><i class="ai ai-arxiv"></i><span>arXiv</span></a>
-                <a class="btn" href="#"><i class="fab fa-github"></i><span>Code</span></a>
-                <a class="btn btn-accent" href="#video"><i class="fas fa-play"></i><span>Video</span></a>
+                <a class="btn" href="#"><i class="fas fa-file-pdf" aria-hidden="true"></i><span>Paper</span></a>
+                <a class="btn" href="#"><i class="ai ai-arxiv" aria-hidden="true"></i><span>arXiv</span></a>
+                <a class="btn" href="#"><i class="fab fa-github" aria-hidden="true"></i><span>Code</span></a>
+                <a class="btn btn-accent" href="#video"><i class="fas fa-play" aria-hidden="true"></i><span>Video</span></a>
             </div>
         </div>
+    </header>
 
-        <!-- Explainer video -->
-        <div class="hero-media" id="video">
-            <div class="explainer">
-                <video controls playsinline preload="metadata" src="assets/video/ASD_full_3m21s.mp4#t=0.1"></video>
+    <main id="main">
+
+    <!-- ================= Real-world video wall =================
+         All eight clips autoplay muted and loop (each plays through to its end);
+         main.js pauses off-screen clips and resumes them when back in view.
+         Grid: the two portrait multi-stage clips flank 2 rows x 3 landscape clips. -->
+    <section class="section section-dark wall-section" id="real-world">
+        <div class="wrap wrap-wide">
+            <div class="wall-head">
+                <div>
+                    <p class="eyebrow eyebrow-left">Zero-shot on a FrodoBot rover</p>
+                    <h2 class="section-title section-title-left">Real-World Experiments</h2>
+                </div>
+                <div class="seg wall-filter" role="group" aria-label="Highlight clips by setting" hidden>
+                    <button class="seg-btn is-active" type="button" data-filter="all" aria-pressed="true">All</button>
+                    <button class="seg-btn" type="button" data-filter="indoor" aria-pressed="false"><i class="fas fa-building" aria-hidden="true"></i> Indoor</button>
+                    <button class="seg-btn" type="button" data-filter="outdoor" aria-pressed="false"><i class="fas fa-tree" aria-hidden="true"></i> Outdoor</button>
+                    <button class="seg-btn" type="button" data-filter="multistage" aria-pressed="false"><i class="fas fa-layer-group" aria-hidden="true"></i> Multi-Stage</button>
+                </div>
+            </div>
+
+            <div class="wall" id="wall" data-filter="all">
+                <!-- Old deep links #indoor / #outdoor / #multistage land here and pick the matching filter. -->
+                <span class="wall-anchor" id="indoor"></span><span class="wall-anchor" id="outdoor"></span><span class="wall-anchor" id="multistage"></span>
+
+                <figure class="video-item portrait wall-left" data-kind="multistage">
+                    <video muted loop playsinline preload="none" data-src="assets/video/multistage_hallway.mp4" poster="assets/images/posters/multistage_hallway.jpg" aria-label="Multi-stage hallway task rollout"></video>
+                    <figcaption class="vid-cap"><span class="vid-kind">Multi-stage</span> Hallway (multi-stage)</figcaption>
+                </figure>
+                <figure class="video-item portrait wall-right" data-kind="multistage">
+                    <video muted loop playsinline preload="none" data-src="assets/video/multistage_sidewalk.mp4" poster="assets/images/posters/multistage_sidewalk.jpg" aria-label="Multi-stage sidewalk task rollout"></video>
+                    <figcaption class="vid-cap"><span class="vid-kind">Multi-stage</span> Sidewalk (multi-stage)</figcaption>
+                </figure>
+
+                <figure class="video-item" data-kind="indoor"><video muted loop playsinline preload="none" data-src="assets/video/indoor_chair_right.mp4" poster="assets/images/posters/indoor_chair_right.jpg" aria-label="Right chair task rollout"></video><figcaption class="vid-cap"><span class="vid-kind">Indoor</span> Right chair</figcaption></figure>
+                <figure class="video-item" data-kind="indoor"><video muted loop playsinline preload="none" data-src="assets/video/indoor_monitor.mp4" poster="assets/images/posters/indoor_monitor.jpg" aria-label="Monitor task rollout"></video><figcaption class="vid-cap"><span class="vid-kind">Indoor</span> Monitor</figcaption></figure>
+                <figure class="video-item" data-kind="indoor"><video muted loop playsinline preload="none" data-src="assets/video/indoor_chair.mp4" poster="assets/images/posters/indoor_chair.jpg" aria-label="Chair task rollout"></video><figcaption class="vid-cap"><span class="vid-kind">Indoor</span> Chair</figcaption></figure>
+                <figure class="video-item" data-kind="outdoor"><video muted loop playsinline preload="none" data-src="assets/video/outdoor_statue.mp4" poster="assets/images/posters/outdoor_statue.jpg" aria-label="Statue task rollout"></video><figcaption class="vid-cap"><span class="vid-kind">Outdoor</span> Statue</figcaption></figure>
+                <figure class="video-item" data-kind="outdoor"><video muted loop playsinline preload="none" data-src="assets/video/outdoor_car.mp4" poster="assets/images/posters/outdoor_car.jpg" aria-label="Car task rollout"></video><figcaption class="vid-cap"><span class="vid-kind">Outdoor</span> Car</figcaption></figure>
+                <figure class="video-item" data-kind="outdoor"><video muted loop playsinline preload="none" data-src="assets/video/outdoor_tree.mp4" poster="assets/images/posters/outdoor_tree.jpg" aria-label="Tree task rollout"></video><figcaption class="vid-cap"><span class="vid-kind">Outdoor</span> Tree</figcaption></figure>
+            </div>
+
+            <p class="wall-note">Indoor and outdoor clips run ASD side by side with the best baseline; the prompt and success
+                rate are shown in each clip. Click a clip to pause it.</p>
+
+            <!-- Rollout composites; column widths follow the image aspect ratios so both rows match in height. -->
+            <div class="composites">
+                <figure class="figure">
+                    <img src="assets/images/filmstrip.webp" loading="lazy" width="2000" height="725"
+                         alt="Five time-lapse composites of the rover approaching boxed targets: a blue chair and a monitor indoors, and a red car, a statue and a tree outdoors.">
+                    <figcaption>Rollout composites on indoor (a, b) and outdoor (c&ndash;e) tasks; the box marks the target.</figcaption>
+                </figure>
+                <figure class="figure">
+                    <img src="assets/images/multistage.webp" loading="lazy" width="2000" height="492"
+                         alt="Frame sequences of the two multi-stage rollouts. Top: navigate through the door, turn right, then go along the hallway. Bottom: navigate right to the sidewalk, and navigate along the sidewalk.">
+                    <figcaption>Frames from the two multi-stage rollouts.</figcaption>
+                </figure>
             </div>
         </div>
+    </section>
 
+    <!-- ================= Overview: explainer video, TL;DR, highlights ================= -->
+    <section class="section overview" id="video">
         <div class="wrap">
+            <div class="explainer">
+                <video controls playsinline preload="metadata" src="assets/video/ASD_full_3m21s.mp4#t=0.1"
+                       aria-label="Explainer video for Action Self-Distillation"></video>
+            </div>
+
             <p class="tldr">
                 <b>TL;DR:</b> A VLM teaches itself to navigate from language by explaining recorded demonstrations &mdash;
                 no human goal or reasoning labels needed.
             </p>
 
+            <!-- Headline numbers, all taken from the highlights and result tables below.
+                 main.js counts the [data-count] spans up from 0 when they scroll into view. -->
+            <ul class="stats">
+                <li class="stat"><span class="stat-num"><span data-count="13">13</span></span><span class="stat-label">real-world tasks, zero-shot</span></li>
+                <li class="stat"><span class="stat-num">~<span data-count="100">100</span>&thinsp;h</span><span class="stat-label">of navigation data (vs. 9,500&nbsp;h for OmniVLA)</span></li>
+                <li class="stat"><span class="stat-num"><span data-count="95">95</span>%</span><span class="stat-label">outdoor success</span></li>
+                <li class="stat"><span class="stat-num"><span data-count="80">80</span>%</span><span class="stat-label">ablation success vs. 36% for SFT on Claude Opus 5 labels</span></li>
+            </ul>
+
             <div class="highlights">
+                <p class="eyebrow">Overview</p>
                 <h2 class="section-title">Highlights</h2>
-                <ol>
-                    <li>
-                        <b>Self-distillation from trajectory-only data.</b> One open-source VLM serves as <span class="hl">both teacher and
-                        student</span>. During training, the teacher sees the demonstrated trajectory and infers the navigation goal
-                        and a reasoning trace. The student learns to produce the same reasoning and trajectory from the camera
-                        image and the goal. <span class="hl">No human-written goals or reasoning traces</span> are used.
+                <ol class="hl-grid">
+                    <li class="hl-card glass">
+                        <span class="hl-icon" aria-hidden="true"><i class="fas fa-brain"></i></span>
+                        <div>
+                            <b>Self-distillation from trajectory-only data.</b> One open-source VLM serves as <span class="hl">both teacher and
+                            student</span>. During training, the teacher sees the demonstrated trajectory and infers the navigation goal
+                            and a reasoning trace. The student learns to produce the same reasoning and trajectory from the camera
+                            image and the goal. <span class="hl">No human-written goals or reasoning traces</span> are used.
+                        </div>
                     </li>
-                    <li>
-                        <b>Steerable navigation with structured reasoning.</b> In the same scene, the policy <span class="hl">reaches different
-                        targets</span> when given different directional, color, or object commands. Each action comes with a short
-                        trace covering perception, prediction, and planning. Training uses about 100 hours of navigation data,
-                        compared with 9,500 hours for OmniVLA.
+                    <li class="hl-card glass">
+                        <span class="hl-icon" aria-hidden="true"><i class="fas fa-compass"></i></span>
+                        <div>
+                            <b>Steerable navigation with structured reasoning.</b> In the same scene, the policy <span class="hl">reaches different
+                            targets</span> when given different directional, color, or object commands. Each action comes with a short
+                            trace covering perception, prediction, and planning. Training uses about 100 hours of navigation data,
+                            compared with 9,500 hours for OmniVLA.
+                        </div>
                     </li>
-                    <li>
-                        <b>Zero-shot real-world generalization.</b> We evaluate on 13 real-world tasks with a FrodoBot rover.
-                        Although the training data is mostly outdoor, the policy handles <span class="hl">unseen indoor scenes</span> and <span class="hl">multi-stage
-                        instructions</span>. It improves success by 30 percentage points over OmniVLA indoors and over NaVILA on
-                        multi-stage tasks, and reaches 95% success outdoors.
+                    <li class="hl-card glass">
+                        <span class="hl-icon" aria-hidden="true"><i class="fas fa-globe"></i></span>
+                        <div>
+                            <b>Zero-shot real-world generalization.</b> We evaluate on 13 real-world tasks with a FrodoBot rover.
+                            Although the training data is mostly outdoor, the policy handles <span class="hl">unseen indoor scenes</span> and <span class="hl">multi-stage
+                            instructions</span>. It improves success by 30 percentage points over OmniVLA indoors and over NaVILA on
+                            multi-stage tasks, and reaches 95% success outdoors.
+                        </div>
                     </li>
-                    <li>
-                        <b>Outperforms SFT on frontier-model labels.</b> Fine-tuning on reasoning labels from Claude Opus 5
-                        reaches 36% success on our ablation tasks; self-distillation reaches <span class="hl">80%</span>. On the <i>Left chair</i>
-                        task, ASD finishes in 15 seconds, while prompting Claude Opus 4.7 to drive takes over 14 minutes.
+                    <li class="hl-card glass">
+                        <span class="hl-icon" aria-hidden="true"><i class="fas fa-trophy"></i></span>
+                        <div>
+                            <b>Outperforms SFT on frontier-model labels.</b> Fine-tuning on reasoning labels from Claude Opus 5
+                            reaches 36% success on our ablation tasks; self-distillation reaches <span class="hl">80%</span>. On the <i>Left chair</i>
+                            task, ASD finishes in 15 seconds, while prompting Claude Opus 4.7 to drive takes over 14 minutes.
+                        </div>
                     </li>
                 </ol>
             </div>
         </div>
-    </header>
-
-    <!-- ================= Real-world: indoor ================= -->
-    <section class="section section-tint" id="indoor">
-        <div class="wrap">
-            <h2 class="section-title">Real-World Experiment: Indoor</h2>
-            <div class="video-grid">
-                <div class="video-item"><video muted loop playsinline preload="none" data-src="assets/video/indoor_chair_right.mp4" poster="assets/images/posters/indoor_chair_right.jpg"></video></div>
-                <div class="video-item"><video muted loop playsinline preload="none" data-src="assets/video/indoor_monitor.mp4" poster="assets/images/posters/indoor_monitor.jpg"></video></div>
-                <div class="video-item"><video muted loop playsinline preload="none" data-src="assets/video/indoor_chair.mp4" poster="assets/images/posters/indoor_chair.jpg"></video></div>
-            </div>
-        </div>
     </section>
 
-    <!-- ================= Real-world: outdoor ================= -->
-    <section class="section" id="outdoor">
+    <!-- ================= Method: animated explainer + static figures =================
+         Without JS or under reduced motion the explainer renders fully, statically.
+         main.js adds .is-animated and steps through data-stage 1 (teacher) -> 2 (student) -> 3 (deploy). -->
+    <section class="section section-dark" id="method">
         <div class="wrap">
-            <h2 class="section-title">Real-World Experiment: Outdoor</h2>
-            <div class="video-grid">
-                <div class="video-item"><video muted loop playsinline preload="none" data-src="assets/video/outdoor_statue.mp4" poster="assets/images/posters/outdoor_statue.jpg"></video></div>
-                <div class="video-item"><video muted loop playsinline preload="none" data-src="assets/video/outdoor_car.mp4" poster="assets/images/posters/outdoor_car.jpg"></video></div>
-                <div class="video-item"><video muted loop playsinline preload="none" data-src="assets/video/outdoor_tree.mp4" poster="assets/images/posters/outdoor_tree.jpg"></video></div>
-            </div>
-        </div>
-    </section>
+            <p class="eyebrow">How it works</p>
+            <h2 class="section-title">Method</h2>
+            <p class="section-sub">
+                One open-source VLM plays both roles. Training uses only recorded trajectories &mdash;
+                <b>no human-written goals or reasoning traces</b>.
+            </p>
 
-    <!-- ================= Real-world: multi-stage ================= -->
-    <section class="section section-tint" id="multistage">
-        <div class="wrap">
-            <h2 class="section-title">Real-World Experiment: Multi-Stage</h2>
-            <div class="video-grid video-grid-center">
-                <figure class="video-item portrait">
-                    <video muted loop playsinline preload="none" data-src="assets/video/multistage_hallway.mp4" poster="assets/images/posters/multistage_hallway.jpg"></video>
+            <div class="mx" id="mx" data-stage="3">
+                <div class="mx-controls" hidden>
+                    <div class="seg mx-steps" role="group" aria-label="Method step">
+                        <button class="seg-btn mx-step" type="button" data-step="1" aria-pressed="false"><span class="mx-num">1</span> Teacher</button>
+                        <button class="seg-btn mx-step" type="button" data-step="2" aria-pressed="false"><span class="mx-num">2</span> Student</button>
+                        <button class="seg-btn mx-step" type="button" data-step="3" aria-pressed="false"><span class="mx-num">3</span> Deploy</button>
+                    </div>
+                    <button class="mx-replay" type="button"><i class="fas fa-rotate-right" aria-hidden="true"></i> Replay</button>
+                </div>
+
+                <div class="mx-stages">
+                    <!-- 1. Self-teacher -->
+                    <article class="mx-card mx-teacher" data-card="1">
+                        <header class="mx-head">
+                            <span class="mx-badge" aria-hidden="true"><i class="fas fa-graduation-cap"></i></span>
+                            <div><h3>1 &middot; Self-teacher</h3><p>Frozen copy of the same VLM</p></div>
+                        </header>
+                        <div class="mx-view">
+                            <!-- Crop of the clean camera frame from method.webp, with the GT path drawn over it. -->
+                            <svg viewBox="0 0 444 250" role="img" aria-label="Camera image with the demonstrated trajectory drawn on it">
+                                <image href="assets/images/method.webp" x="-18" y="-438" width="2000" height="772"/>
+                                <path class="mx-traj mx-traj-gt" pathLength="1" d="M236 250 C 244 206, 224 184, 188 158"/>
+                            </svg>
+                            <span class="mx-tag mx-tag-gt"><i class="fas fa-route" aria-hidden="true"></i> Image + GT trajectory</span>
+                        </div>
+                        <div class="mx-model"><i class="fas fa-microchip" aria-hidden="true"></i> VLM</div>
+                        <div class="mx-out" aria-label="Teacher output">
+                            <span class="mx-tok" style="--i:0">Task</span>
+                            <span class="mx-tok" style="--i:1">Perception</span>
+                            <span class="mx-tok" style="--i:2">Agents</span>
+                            <span class="mx-tok" style="--i:3">Prediction</span>
+                            <span class="mx-tok" style="--i:4">Planning</span>
+                        </div>
+                        <p class="mx-desc">Sees the camera image with the demonstrated (GT) trajectory overlaid, and writes the
+                            goal and a reasoning trace.</p>
+                    </article>
+
+                    <div class="mx-arrow mx-arrow-1" aria-hidden="true"><span class="mx-arrow-line"></span><span class="mx-arrow-label">goal + reasoning</span></div>
+
+                    <!-- 2. Student -->
+                    <article class="mx-card mx-student" data-card="2">
+                        <header class="mx-head">
+                            <span class="mx-badge" aria-hidden="true"><i class="fas fa-book-open"></i></span>
+                            <div><h3>2 &middot; Student</h3><p>Same VLM, learns from the teacher</p></div>
+                        </header>
+                        <div class="mx-view">
+                            <svg viewBox="0 0 444 250" role="img" aria-label="The same camera image, without the trajectory">
+                                <image href="assets/images/method.webp" x="-18" y="-438" width="2000" height="772"/>
+                            </svg>
+                            <span class="mx-tag mx-tag-goal"><i class="fas fa-crosshairs" aria-hidden="true"></i> Image + goal only</span>
+                        </div>
+                        <div class="mx-model"><i class="fas fa-microchip" aria-hidden="true"></i> VLM</div>
+                        <div class="mx-out" aria-label="Student output">
+                            <span class="mx-tok mx-tok-kl" style="--i:0">Perception</span>
+                            <span class="mx-tok mx-tok-kl" style="--i:1">Agents</span>
+                            <span class="mx-tok mx-tok-kl" style="--i:2">Prediction</span>
+                            <span class="mx-tok mx-tok-kl" style="--i:3">Planning</span>
+                            <span class="mx-tok mx-tok-ce" style="--i:4">Trajectory</span>
+                        </div>
+                        <div class="mx-loss">
+                            <span class="mx-loss-kl">KL on reasoning tokens</span>
+                            <span class="mx-loss-ce">CE on GT trajectory tokens</span>
+                        </div>
+                        <p class="mx-desc">Sees only the camera image and the goal, and learns to produce the same reasoning
+                            and trajectory.</p>
+                    </article>
+
+                    <div class="mx-arrow mx-arrow-2" aria-hidden="true"><span class="mx-arrow-line"></span><span class="mx-arrow-label">deploy student</span></div>
+
+                    <!-- 3. Deploy -->
+                    <article class="mx-card mx-deploy" data-card="3">
+                        <header class="mx-head">
+                            <span class="mx-badge" aria-hidden="true"><i class="fas fa-robot"></i></span>
+                            <div><h3>3 &middot; Deploy</h3><p>Student only, no teacher</p></div>
+                        </header>
+                        <div class="mx-view mx-view-scene">
+                            <!-- Schematic scene: floor grid, target, planned path, and the robot driving it. -->
+                            <svg viewBox="0 0 444 250" role="img" aria-label="Schematic of the robot driving a planned path to a target">
+                                <defs>
+                                    <linearGradient id="mx-floor" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0" stop-color="#0d1f18"/>
+                                        <stop offset="1" stop-color="#06100c"/>
+                                    </linearGradient>
+                                </defs>
+                                <rect width="444" height="250" fill="url(#mx-floor)"/>
+                                <g class="mx-grid">
+                                    <path d="M0 250 L190 70 M74 250 L204 70 M148 250 L216 70 M222 250 L222 70 M296 250 L228 70 M370 250 L240 70 M444 250 L254 70"/>
+                                    <path d="M0 220 H444 M0 180 H444 M0 145 H444 M0 116 H444 M0 92 H444 M0 74 H444"/>
+                                </g>
+                                <g class="mx-target" transform="translate(318 86)">
+                                    <circle r="20" class="ring ring-2"/>
+                                    <circle r="12" class="ring"/>
+                                    <circle r="5" class="dot"/>
+                                </g>
+                                <path id="mx-dpath" class="mx-traj mx-traj-deploy" pathLength="1" d="M222 236 C 226 180, 270 130, 316 92"/>
+                                <g class="mx-robot">
+                                    <rect x="-13" y="-9" width="26" height="18" rx="5"/>
+                                    <rect x="7" y="-6" width="4" height="12" rx="1.5" class="lens"/>
+                                    <animateMotion id="mx-robot-motion" dur="2.8s" begin="indefinite" fill="freeze" rotate="auto"
+                                                   calcMode="spline" keyTimes="0;1" keySplines="0.4 0 0.2 1">
+                                        <mpath href="#mx-dpath"/>
+                                    </animateMotion>
+                                </g>
+                            </svg>
+                            <span class="mx-tag mx-tag-cmd"><i class="fas fa-comment" aria-hidden="true"></i> &ldquo;Navigate to the chair&rdquo;</span>
+                        </div>
+                        <div class="mx-model"><i class="fas fa-microchip" aria-hidden="true"></i> Student VLM</div>
+                        <div class="mx-out" aria-label="Deployed policy output">
+                            <span class="mx-tok" style="--i:0">Perception</span>
+                            <span class="mx-tok" style="--i:1">Prediction</span>
+                            <span class="mx-tok" style="--i:2">Planning</span>
+                            <span class="mx-tok mx-tok-ce" style="--i:3">Trajectory</span>
+                        </div>
+                        <p class="mx-desc">The student alone steers the robot from a camera image and a language command,
+                            with a short trace for each action.</p>
+                    </article>
+                </div>
+            </div>
+
+            <!-- Static paper figures; column widths follow the image aspect ratios so heights match. -->
+            <div class="method-figs">
+                <figure class="figure paper">
+                    <img src="assets/images/motivation.webp" loading="lazy" width="2000" height="818"
+                         alt="Diagram: the same VLM acts as student and self-teacher. Both see the camera input; only the self-teacher also receives privileged information. Their outputs are compared, and the resulting paths are drawn toward a red car.">
+                    <figcaption>One VLM, two roles: the self-teacher also receives privileged information
+                        (the demonstrated trajectory); the student does not.</figcaption>
                 </figure>
-                <figure class="video-item portrait">
-                    <video muted loop playsinline preload="none" data-src="assets/video/multistage_sidewalk.mp4" poster="assets/images/posters/multistage_sidewalk.jpg"></video>
+                <figure class="figure paper">
+                    <img src="assets/images/method.webp" loading="lazy" width="2000" height="772"
+                         alt="Training pipeline. Top: the Self-Teacher VLM (Qwen2.5-3B) takes the GT trajectory, a self-teacher prompt and the image with the path drawn on it, and outputs a goal, perception, plan and trajectory. Bottom: the Student VLM (Qwen2.5-3B) takes the raw image, a student prompt and the extracted goal, and outputs perception, plan and trajectory.">
+                    <figcaption>Training overview. The self-teacher (top) sees the demonstrated (GT) trajectory and extracts the
+                        goal and reasoning; the student (bottom) sees only the image, its prompt, and the extracted goal.</figcaption>
                 </figure>
             </div>
         </div>
     </section>
 
-    <!-- ================= Steerability (interactive) ================= -->
-    <section class="section" id="steerability">
+    <!-- ================= Steerability (interactive) =================
+         Two stacked <video>s crossfade on every prompt switch (see main.js). -->
+    <section class="section section-tint steer-section" id="steerability">
         <div class="wrap">
+            <p class="eyebrow">Interactive &middot; pick a capability</p>
             <h2 class="section-title">Steerability</h2>
             <p class="section-sub">Same scene, different prompt &mdash; pick one to see the rollout.</p>
 
             <div class="steer" id="steer">
                 <div class="steer-controls">
-                    <div class="steer-tabs" role="tablist">
-                        <button class="steer-tab is-active" data-group="object" role="tab" type="button">Object</button>
-                        <button class="steer-tab" data-group="direction" role="tab" type="button">Direction</button>
-                        <button class="steer-tab" data-group="color" role="tab" type="button">Color</button>
+                    <div class="seg steer-tabs" role="tablist" aria-label="Prompt type">
+                        <button class="seg-btn steer-tab is-active" data-group="object" role="tab" type="button"><i class="fas fa-cube" aria-hidden="true"></i> Object</button>
+                        <button class="seg-btn steer-tab" data-group="direction" role="tab" type="button"><i class="fas fa-arrows-left-right" aria-hidden="true"></i> Direction</button>
+                        <button class="seg-btn steer-tab" data-group="color" role="tab" type="button"><i class="fas fa-palette" aria-hidden="true"></i> Color</button>
                     </div>
                     <div class="steer-prompts" id="steer-prompts"></div>
                 </div>
                 <div class="steer-stage">
-                    <video id="steer-video" muted loop playsinline></video>
+                    <div class="steer-screen" id="steer-screen">
+                        <video class="steer-vid is-on" id="steer-video" muted loop playsinline aria-label="Steerability rollout for the selected prompt"></video>
+                        <video class="steer-vid" muted loop playsinline aria-hidden="true" tabindex="-1"></video>
+                        <div class="steer-cap" id="steer-cap" aria-live="polite"></div>
+                        <div class="steer-progress" aria-hidden="true"><span id="steer-bar"></span></div>
+                    </div>
                     <div class="placeholder placeholder-fill" id="steer-placeholder" hidden>
-                        <div class="ph-tag">待补素材</div>
+                        <div class="ph-tag">Coming soon</div>
                         <div class="ph-title" id="steer-ph-title"></div>
                         <div class="ph-body" id="steer-ph-body"></div>
                     </div>
                 </div>
             </div>
 
+            <figure class="figure figure-wide">
+                <img src="assets/images/steerability.webp" loading="lazy" width="2000" height="331"
+                     alt="Composite rollouts in one lab scene for three prompt families: navigate to the black or blue chair; to the chair on the left, middle or right; and to the trash bin, monitor or chair. A box marks each target.">
+                <figcaption>All eight prompts at a glance &mdash; color, direction, and object &mdash; in the same scene.</figcaption>
+            </figure>
         </div>
     </section>
 
     <!-- ================= Reasoning ================= -->
-    <section class="section section-tint" id="reasoning">
+    <section class="section" id="reasoning">
         <div class="wrap">
+            <p class="eyebrow">Explainable actions</p>
             <h2 class="section-title">Reasoning</h2>
+            <p class="section-sub">Each action comes with a short trace covering perception, prediction, and planning.
+                Click a trace to replay it.</p>
             <div class="reasoning-grid">
                 <figure class="reasoning-card">
                     <img src="assets/images/reasoning_chair.webp" loading="lazy" width="450" height="253"
@@ -193,8 +433,9 @@
     </section>
 
     <!-- ================= Quantitative results ================= -->
-    <section class="section" id="results">
+    <section class="section section-tint" id="results">
         <div class="wrap">
+            <p class="eyebrow">Numbers</p>
             <h2 class="section-title">Results</h2>
 
             <div class="legend" id="legend"></div>
@@ -208,7 +449,6 @@
                 <div class="chart-title">Ablation</div>
                 <div class="chart" id="chart-ablation"></div>
             </div>
-
 
             <details class="tables">
                 <summary>Full result tables</summary>
@@ -307,12 +547,13 @@
         </div>
     </section>
 
-    <!-- ================= Limitations + BibTeX ================= -->
-    <section class="section section-tint" id="bibtex">
+    <!-- ================= BibTeX ================= -->
+    <section class="section" id="bibtex">
         <div class="wrap">
+            <p class="eyebrow">Cite</p>
             <h2 class="section-title">BibTeX</h2>
             <div class="bibtex">
-                <button class="copy-btn" id="copy-bib" type="button"><i class="far fa-copy"></i> <span>Copy</span></button>
+                <button class="copy-btn" id="copy-bib" type="button"><i class="far fa-copy" aria-hidden="true"></i> <span>Copy</span></button>
 <pre><code id="bib">@inproceedings{feng2026asd,
     title     = {Training Generalist Navigation Policies via Action Self-Distillation},
     author    = {Feng, Bowen and Wang, Keqin and Yang, Yulong and Joshi, Amogh
@@ -324,10 +565,12 @@
         </div>
     </section>
 
+    </main>
+
     <footer class="footer">
         <div class="wrap">Website template adapted from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.</div>
     </footer>
 
-    <script src="static/js/main.js?v=10"></script>
+    <script src="static/js/main.js?v=21"></script>
 </body>
 </html>

@@ -1,11 +1,88 @@
 (function () {
     'use strict';
 
+    // Lets CSS tell "JS is running" apart from the no-JS fallback layout.
+    document.documentElement.classList.add('js');
+
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const saveData = !!(navigator.connection && navigator.connection.saveData);
     const SVG_NS = 'http://www.w3.org/2000/svg';
 
     /* ------------------------------------------------------------------
-     * Videos: load only when near the viewport, pause when off-screen.
+     * Hero background clip: muted ambient loop behind the title. Skipped
+     * under reduced motion or Save-Data (the poster stays), and paused
+     * while the hero is off-screen.
+     * ------------------------------------------------------------------ */
+    (function heroBackground() {
+        const hero = document.getElementById('hero');
+        const v = hero && hero.querySelector('video[data-bg-src]');
+        if (!v || reduceMotion || saveData) return;
+
+        v.src = v.dataset.bgSrc;
+        v.preload = 'auto';
+        const play = () => v.play().catch(() => {});
+        play();
+
+        new IntersectionObserver(([e]) => {
+            if (e.isIntersecting) play(); else v.pause();
+        }).observe(hero);
+    })();
+
+    /* ------------------------------------------------------------------
+     * Sticky nav: slides in after the hero, highlights the section in view.
+     * ------------------------------------------------------------------ */
+    (function topNav() {
+        const nav = document.getElementById('topnav');
+        const hero = document.getElementById('hero');
+        if (!nav || !hero) return;
+        const list = nav.querySelector('.topnav-links');
+        const links = Array.from(list.querySelectorAll('a[href^="#"]'));
+        const sections = links.map(a => document.getElementById(a.getAttribute('href').slice(1))).filter(Boolean);
+        let current = null;
+
+        function setActive(id) {
+            if (id === current) return;
+            current = id;
+            links.forEach(a => {
+                const on = a.getAttribute('href') === '#' + id;
+                if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+                // On narrow screens the link row scrolls sideways: keep the active one centred.
+                if (on && list.scrollWidth > list.clientWidth) {
+                    const left = a.offsetLeft - list.offsetLeft - (list.clientWidth - a.offsetWidth) / 2;
+                    list.scrollTo({ left: left, behavior: reduceMotion ? 'auto' : 'smooth' });
+                }
+            });
+        }
+
+        // A thin band ~40% down the viewport decides which section is "current".
+        const visible = new Set();
+        const io = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) visible.add(e.target); else visible.delete(e.target); });
+            const hit = sections.filter(s => visible.has(s)).pop();
+            if (hit) setActive(hit.id);
+        }, { rootMargin: '-40% 0px -55% 0px' });
+        sections.forEach(s => io.observe(s));
+
+        // Visibility (and the last section at the very bottom) from scroll position.
+        let ticking = false;
+        function onScroll() {
+            ticking = false;
+            const y = window.scrollY;
+            nav.classList.toggle('is-visible', y > hero.offsetHeight - 160);
+            if (y < hero.offsetHeight * 0.5) setActive(null);
+            if (window.innerHeight + y >= document.documentElement.scrollHeight - 2 && sections.length) {
+                setActive(sections[sections.length - 1].id);
+            }
+        }
+        window.addEventListener('scroll', () => {
+            if (!ticking) { ticking = true; requestAnimationFrame(onScroll); }
+        }, { passive: true });
+        onScroll();
+    })();
+
+    /* ------------------------------------------------------------------
+     * Videos: load only when near the viewport; autoplay muted and loop
+     * (each clip plays through), pause off-screen and resume when back.
      * ------------------------------------------------------------------ */
     (function lazyVideos() {
         const videos = Array.from(document.querySelectorAll('video[data-src]'));
@@ -24,15 +101,126 @@
 
         videos.forEach(v => {
             io.observe(v);
-            // No visible controls on the looping clips, so a click toggles playback.
-            v.addEventListener('click', () => { if (v.paused) v.play().catch(() => {}); else v.pause(); });
+            // No visible controls on the looping clips, so a click (or Space/Enter) toggles playback.
+            const toggle = () => { if (v.paused) v.play().catch(() => {}); else v.pause(); };
+            v.addEventListener('click', toggle);
+            if (reduceMotion) return;
+            v.tabIndex = 0;
+            v.addEventListener('keydown', e => {
+                if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); }
+            });
+            // Show a play glyph while paused (off-screen pauses are invisible anyway).
+            const box = v.closest('.video-item');
+            if (box) {
+                v.addEventListener('pause', () => box.classList.add('is-paused'));
+                v.addEventListener('play', () => box.classList.remove('is-paused'));
+            }
         });
+    })();
+
+    /* ------------------------------------------------------------------
+     * Video wall filter: All / Indoor / Outdoor / Multi-Stage dims the
+     * other clips (they keep playing). Old #indoor/#outdoor/#multistage
+     * deep links pick the matching filter.
+     * ------------------------------------------------------------------ */
+    (function wallFilter() {
+        const wall = document.getElementById('wall');
+        const bar = document.querySelector('.wall-filter');
+        if (!wall || !bar) return;
+        const btns = Array.from(bar.querySelectorAll('[data-filter]'));
+
+        function set(f) {
+            wall.dataset.filter = f;
+            btns.forEach(b => {
+                const on = b.dataset.filter === f;
+                b.classList.toggle('is-active', on);
+                b.setAttribute('aria-pressed', on);
+            });
+        }
+
+        btns.forEach(b => b.addEventListener('click', () => set(b.dataset.filter)));
+        const fromHash = () => {
+            const k = location.hash.slice(1);
+            if (btns.some(b => b.dataset.filter === k)) set(k);
+        };
+        bar.hidden = false;
+        fromHash();
+        window.addEventListener('hashchange', fromHash);
+    })();
+
+    /* ------------------------------------------------------------------
+     * Method explainer: steps 1 (teacher) -> 2 (student) -> 3 (deploy).
+     * CSS keys everything off .is-animated, data-stage and the cards'
+     * .is-active / .is-done classes; without JS or under reduced motion
+     * the explainer simply stays in its fully drawn static state.
+     * ------------------------------------------------------------------ */
+    (function methodExplainer() {
+        const mx = document.getElementById('mx');
+        if (!mx || reduceMotion) return;
+        const cards = Array.from(mx.querySelectorAll('.mx-card'));
+        const steps = Array.from(mx.querySelectorAll('.mx-step'));
+        const replay = mx.querySelector('.mx-replay');
+        const motion = document.getElementById('mx-robot-motion');
+        const DUR = { 1: 4600, 2: 5400, 3: 4200 };   // ms per step while auto-playing
+        let timer = null;
+
+        function setStage(n) {
+            mx.dataset.stage = n;
+            cards.forEach((c, i) => {
+                c.classList.toggle('is-active', i + 1 === n);
+                c.classList.toggle('is-done', i + 1 < n);
+            });
+            steps.forEach(b => b.setAttribute('aria-pressed', Number(b.dataset.step) === n));
+            // SMIL: drive the robot along the deploy path.
+            if (n === 3 && motion && motion.beginElement) {
+                try { motion.beginElement(); } catch (e) { /* SMIL unsupported: robot just stays hidden */ }
+            }
+        }
+
+        // Reset to blank first so CSS animations restart even on the same step.
+        function restartAt(n) {
+            setStage(0);
+            void mx.offsetWidth;
+            setStage(n);
+        }
+
+        function autoplay() {
+            clearTimeout(timer);
+            mx.classList.add('is-auto');
+            let n = 1;
+            (function go() {
+                mx.style.setProperty('--dur', DUR[n] + 'ms');
+                restartAt(n);
+                timer = setTimeout(() => {
+                    if (n < 3) { n++; go(); } else { mx.classList.remove('is-auto'); }
+                }, DUR[n]);
+            })();
+        }
+
+        steps.forEach(b => b.addEventListener('click', () => {
+            clearTimeout(timer);
+            mx.classList.remove('is-auto');
+            restartAt(Number(b.dataset.step));
+        }));
+        replay.addEventListener('click', autoplay);
+
+        mx.classList.add('is-animated');
+        mx.querySelector('.mx-controls').hidden = false;
+        setStage(0);
+
+        // Start the first time the explainer is well into view.
+        const io = new IntersectionObserver(entries => {
+            if (entries.some(e => e.isIntersecting)) { autoplay(); io.disconnect(); }
+        }, { threshold: 0.35 });
+        io.observe(mx.querySelector('.mx-stages'));
     })();
 
     /* ------------------------------------------------------------------
      * Steerability: same scene, swap the rollout by prompt.
      * Clips live at assets/video/steer/<group>_<key>.mp4. A missing clip
      * shows a placeholder, so new files only need to be dropped in.
+     * Two stacked <video>s crossfade: the next clip loads into the hidden
+     * one and fades in once it has data.
      * ------------------------------------------------------------------ */
     const STEER = {
         object: [
@@ -56,21 +244,42 @@
         if (!root) return;
         const tabs = Array.from(root.querySelectorAll('.steer-tab'));
         const promptBox = document.getElementById('steer-prompts');
-        const video = document.getElementById('steer-video');
+        const screen = document.getElementById('steer-screen');
+        const vids = Array.from(screen.querySelectorAll('.steer-vid'));
+        const cap = document.getElementById('steer-cap');
+        const bar = document.getElementById('steer-bar');
         const ph = document.getElementById('steer-placeholder');
         const phTitle = document.getElementById('steer-ph-title');
         const phBody = document.getElementById('steer-ph-body');
+        let front = vids[0];
         let token = 0;
+        let inView = false;
 
-        if (reduceMotion) video.controls = true;
+        if (reduceMotion) vids.forEach(v => { v.controls = true; });
 
         function showPlaceholder(item, src) {
-            video.hidden = true;
+            screen.hidden = true;
             ph.hidden = false;
             phTitle.textContent = 'Steerability rollout: “' + item.prompt + '”';
             phBody.innerHTML =
-                '放到 <code>' + src + '</code>（同一场景、同一起点；竖屏或横屏均可，H.264，&le; 3 MB）。<br>' +
-                '文件放好后刷新即可，无需改代码。实际 prompt 文案不同的话，改 <code>static/js/main.js</code> 里的 <code>STEER</code>。';
+                'Expected at <code>' + src + '</code> (same scene and start position; portrait or landscape, H.264, &le; 3 MB).<br>' +
+                'Refresh once the file is in place; no code change needed. To change the prompt text, edit <code>STEER</code> in <code>static/js/main.js</code>.';
+        }
+
+        // Make `v` the visible clip; the other one fades out and is paused.
+        function bringToFront(v) {
+            if (v === front) return;
+            const old = front;
+            front = v;
+            v.classList.add('is-on');
+            old.classList.remove('is-on');
+            v.removeAttribute('aria-hidden');
+            v.tabIndex = 0;
+            v.setAttribute('aria-label', 'Steerability rollout for the selected prompt');
+            old.setAttribute('aria-hidden', 'true');
+            old.tabIndex = -1;
+            old.removeAttribute('aria-label');
+            setTimeout(() => { if (old !== front) old.pause(); }, 550);
         }
 
         function select(group, item, button) {
@@ -80,17 +289,39 @@
             });
             const src = 'assets/video/steer/' + group + '_' + item.key + '.mp4';
             const mine = ++token;
+            // First clip goes straight into the visible element; later ones into the hidden one.
+            const v = front.currentSrc || front.src ? vids.find(x => x !== front) : front;
 
-            video.onloadeddata = () => {
+            v.onloadeddata = () => {
                 if (mine !== token) return;
                 ph.hidden = true;
-                video.hidden = false;
-                if (!reduceMotion) video.play().catch(() => {});
+                screen.hidden = false;
+                cap.textContent = item.prompt;
+                v.currentTime = 0;
+                bringToFront(v);
+                if (!reduceMotion && inView) v.play().catch(() => {});
             };
-            video.onerror = () => { if (mine === token) showPlaceholder(item, src); };
-            video.poster = 'assets/images/posters/steer_' + group + '_' + item.key + '.jpg';
-            video.src = src;
+            v.onerror = () => { if (mine === token) showPlaceholder(item, src); };
+            v.poster = 'assets/images/posters/steer_' + group + '_' + item.key + '.jpg';
+            v.src = src;
         }
+
+        // Playback progress bar for the visible clip (snaps back on loop).
+        let last = 0;
+        vids.forEach(v => v.addEventListener('timeupdate', () => {
+            if (v !== front || !v.duration) return;
+            const p = v.currentTime / v.duration;
+            bar.style.transition = p < last ? 'none' : '';
+            bar.style.width = (p * 100).toFixed(1) + '%';
+            last = p;
+        }));
+
+        // Only play while the stage is on screen.
+        new IntersectionObserver(([e]) => {
+            inView = e.isIntersecting;
+            if (reduceMotion) return;
+            if (inView) front.play().catch(() => {}); else front.pause();
+        }, { threshold: 0.2 }).observe(root);
 
         function showGroup(group) {
             tabs.forEach(t => {
@@ -188,13 +419,14 @@
     })();
 
     /* ------------------------------------------------------------------
-     * Charts (inline SVG, no dependencies).
+     * Charts (inline SVG, no dependencies). Colors are CSS custom
+     * properties (see :root in styles.css) so they follow dark mode.
      * ------------------------------------------------------------------ */
     const SERIES = [
-        { key: 'omni',   name: 'OmniVLA',              color: '#9a9a9a' },
-        { key: 'navila', name: 'NaVILA',               color: '#d4d4d4' },
-        { key: 'asd',    name: 'ASD (Qwen2.5-VL-3B)', color: '#e77500' },
-        { key: 'asd35',  name: 'ASD (Qwen3.5-VL-9B)', color: '#121212' },
+        { key: 'omni',   name: 'OmniVLA',              color: 'var(--s-omni)' },
+        { key: 'navila', name: 'NaVILA',               color: 'var(--s-navila)' },
+        { key: 'asd',    name: 'ASD (Qwen2.5-VL-3B)', color: 'var(--s-asd)' },
+        { key: 'asd35',  name: 'ASD (Qwen3.5-VL-9B)', color: 'var(--s-asd35)' },
     ];
 
     const SUMMARY = [
@@ -204,8 +436,8 @@
     ];
 
     const ABLATION = [
-        { label: 'ASD (Qwen3.5-VL-9B)', value: 0.92, color: '#121212' },
-        { label: 'ASD (Qwen2.5-VL-3B)', value: 0.80, color: '#e77500' },
+        { label: 'ASD (Qwen3.5-VL-9B)', value: 0.92, color: 'var(--s-asd35)' },
+        { label: 'ASD (Qwen2.5-VL-3B)', value: 0.80, color: 'var(--s-asd)' },
         { section: 'Remove the reasoning' },
         { label: 'Goal-only supervision',      value: 0.26 },
         { label: 'Reasoning off at inference', value: 0.14 },
@@ -224,6 +456,9 @@
         if (parent) parent.appendChild(n);
         return n;
     }
+
+    // Inline style for a bar: fill from a CSS variable + its grow-in delay.
+    const barStyle = (color, delayMs) => 'fill:' + color + ';transition-delay:' + delayMs + 'ms';
 
     // One shared tooltip, positioned in viewport coordinates.
     const tip = document.createElement('div');
@@ -271,7 +506,7 @@
                 const h = Math.max(ih * v, v === 0 ? 0 : 1);
                 const x = x0 + bw * j + 1;
                 const y = m.top + ih - h;
-                const r = el('rect', { x: x, y: y, width: bw - 2, height: h, fill: s.color, class: 'bar' }, svg);
+                const r = el('rect', { x: x, y: y, width: bw - 2, height: h, class: 'bar bar-v', style: barStyle(s.color, i * 120 + j * 60) }, svg);
                 attachTip(r, '<b>' + s.name + '</b><br>' + d.label + ': ' + pct(v));
                 if (v === 0) {
                     el('text', { x: x + (bw - 2) / 2, y: m.top + ih - 4, 'text-anchor': 'middle', class: 'val-label', style: 'font-size:10px' }, svg, '0');
@@ -289,7 +524,7 @@
                 if (i === data.length || data[i].group !== data[start].group) {
                     const xa = m.left + band * start, xb = m.left + band * i;
                     el('text', { x: (xa + xb) / 2, y: 16, 'text-anchor': 'middle', class: 'group-label' }, svg, data[start].group.toUpperCase());
-                    el('line', { x1: xa + 6, x2: xb - 6, y1: 24, y2: 24, stroke: '#d6d3d1' }, svg);
+                    el('line', { x1: xa + 6, x2: xb - 6, y1: 24, y2: 24, class: 'base-line' }, svg);
                     if (i < data.length) el('line', { x1: xb, x2: xb, y1: 30, y2: m.top + ih, class: 'sep-line' }, svg);
                     start = i;
                 }
@@ -307,7 +542,7 @@
         const svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': 'Ablation success rates' });
         const iw = W - labelW - right;
 
-        let y = 6;
+        let y = 6, k = 0;
         rows.forEach(r => {
             if (r.section) {
                 el('text', { x: 0, y: y + 24, class: 'section-label' }, svg, r.section);
@@ -315,8 +550,8 @@
                 return;
             }
             el('text', { x: labelW - 14, y: y + rowH / 2 + 5, 'text-anchor': 'end', class: 'cat-label', style: 'font-weight:' + (r.color ? 700 : 500) }, svg, r.label);
-            el('rect', { x: labelW, y: y + 6, width: iw, height: rowH - 12, fill: '#f3f1ee' }, svg);
-            const bar = el('rect', { x: labelW, y: y + 6, width: iw * r.value, height: rowH - 12, fill: r.color || '#a8a29e', class: 'bar' }, svg);
+            el('rect', { x: labelW, y: y + 6, width: iw, height: rowH - 12, class: 'track' }, svg);
+            const bar = el('rect', { x: labelW, y: y + 6, width: iw * r.value, height: rowH - 12, class: 'bar bar-h', style: barStyle(r.color || 'var(--s-ablate)', k++ * 70) }, svg);
             attachTip(bar, '<b>' + r.label + '</b><br>' + pct(r.value) + ' avg. success');
             el('text', { x: labelW + iw * r.value + 8, y: y + rowH / 2 + 5, class: 'val-label', style: 'font-size:13px' }, svg, pct(r.value));
             y += rowH;
@@ -325,10 +560,85 @@
         container.appendChild(svg);
     }
 
+    // Hold the bars at zero until the chart is scrolled into view.
+    function animateIn(container) {
+        if (!container || reduceMotion) return;
+        container.classList.add('is-pending');
+        const io = new IntersectionObserver(entries => {
+            if (entries.some(e => e.isIntersecting)) {
+                // Next frame, so the zero state has been painted before it transitions.
+                requestAnimationFrame(() => container.classList.remove('is-pending'));
+                io.disconnect();
+            }
+        }, { threshold: 0.3 });
+        io.observe(container);
+    }
+
     legend();
     groupedBars(document.getElementById('chart-summary'), SUMMARY,
         { width: 1000, height: 320, fill: 0.62, values: true, label: 'Average success rate by setting' });
     hBars(document.getElementById('chart-ablation'), ABLATION);
+    animateIn(document.getElementById('chart-summary'));
+    animateIn(document.getElementById('chart-ablation'));
+
+    /* ------------------------------------------------------------------
+     * Scroll reveal: sections and cards fade/slide in once. Added from JS
+     * only, so content is never hidden without it (or with reduced motion).
+     * ------------------------------------------------------------------ */
+    (function reveal() {
+        if (reduceMotion || !('IntersectionObserver' in window)) return;
+        const SELECTOR = [
+            // Not the wall clips or the method cards: their opacity is driven by the
+            // wall filter / explainer, which a finished reveal animation would override.
+            'main .eyebrow', 'main .section-title', 'main .section-sub', '.wall-note', '.tldr', '.explainer',
+            '.stat', '.hl-card', '.figure', '.steer', '.reasoning-card', '.legend', '.chart-card',
+            'details.tables', '.bibtex',
+        ].join(',');
+        const items = Array.from(document.querySelectorAll(SELECTOR));
+
+        // Stagger siblings that share a parent (e.g. the cards in one grid).
+        const seen = new Map();
+        items.forEach(n => {
+            const i = seen.get(n.parentNode) || 0;
+            seen.set(n.parentNode, i + 1);
+            n.style.setProperty('--reveal-delay', Math.min(i, 4) * 80 + 'ms');
+            n.classList.add('reveal');
+        });
+
+        const io = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+            });
+        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+        items.forEach(n => io.observe(n));
+    })();
+
+    /* ------------------------------------------------------------------
+     * Stat tiles: count up from 0 when they scroll into view.
+     * ------------------------------------------------------------------ */
+    (function countUp() {
+        const nums = Array.from(document.querySelectorAll('[data-count]'));
+        if (!nums.length || reduceMotion) return;
+        const DURATION = 1200;
+        nums.forEach(n => { n.textContent = '0'; });
+
+        function run(n) {
+            const end = Number(n.dataset.count);
+            const t0 = performance.now();
+            (function frame(now) {
+                const t = Math.min(1, (now - t0) / DURATION);
+                n.textContent = Math.round(end * (1 - Math.pow(1 - t, 3)));
+                if (t < 1) requestAnimationFrame(frame);
+            })(t0);
+        }
+
+        const io = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { run(e.target); io.unobserve(e.target); }
+            });
+        }, { threshold: 0.6 });
+        nums.forEach(n => io.observe(n));
+    })();
 
     /* ------------------------------------------------------------------
      * BibTeX copy button.
