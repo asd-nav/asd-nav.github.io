@@ -1,6 +1,6 @@
 # Project Page — Training Generalist Navigation Policies via Action Self-Distillation
 
-Static project page for the CoRL 2026 submission. This is an **orphan branch**: it
+Static project page for the CoRL 2026 paper. This is an **orphan branch**: it
 contains only the website, with no shared history with `main`.
 
 ## Viewing it
@@ -10,12 +10,16 @@ rather than opened as a `file://` URL — browsers block video playback and some
 asset loads otherwise.
 
 ```bash
-git clone -b website https://github.com/fengb2-coder/self-distilled-reasoning-planning site
+git clone -b website-v2 https://github.com/fengb2-coder/self-distilled-reasoning-planning site
 cd site
 python3 -m http.server 8000
 ```
 
 Then open <http://localhost:8000>.
+
+`python3 -m http.server` does not support HTTP range requests, so the explainer
+video cannot be scrubbed locally (and may not play in Safari). This is a
+limitation of the local server only; GitHub Pages serves it normally.
 
 ## Layout
 
@@ -25,8 +29,11 @@ static/css/styles.css   custom styles
 static/js/main.js       lazy video loading, steerability selector, charts, typewriter
 assets/images/          figures (webp) + video poster frames
 assets/video/           encoded clips (h.264, faststart), incl. the explainer video
-assets/video/steer/     steerability rollouts, <group>_<target>.mp4 (720x810)
+assets/video/steer/     steerability rollouts, <group>_<target>.mp4
 ```
+
+Page order: hero (explainer video, TL;DR, highlights) → Indoor → Outdoor →
+Multi-Stage → Steerability → Reasoning → Results → BibTeX.
 
 Result charts are drawn from the data arrays at the top of the charts block in
 `static/js/main.js`; the full tables in `index.html` must be kept in sync by hand.
@@ -40,12 +47,36 @@ Academicons) load from CDNs; everything else is vendored.
 `static/css/styles.css` or `static/js/main.js`, bump the `?v=N` query on its
 tag in `index.html` so browsers don't serve a stale cached copy.
 
+The steerability prompts shown on the buttons live in the `STEER` table in
+`static/js/main.js`. Adding a clip only requires dropping
+`assets/video/steer/<group>_<key>.mp4` (plus an optional poster at
+`assets/images/posters/steer_<group>_<key>.jpg`) and a matching `STEER` entry.
+
 ## Assets
 
-The clips in `assets/video/` are re-encoded for web delivery (1080px wide for
-the comparison grid, 640–720px for the portrait multi-stage clips). The
-full-resolution originals are **not** in this branch — they live in
-`videos/video_in_paper/` in the working directory, outside version control.
+All clips are re-encoded for web delivery; full-resolution originals are **not**
+in this branch.
+
+| Clips | Size | Notes |
+|---|---|---|
+| `ASD_full_3m21s.mp4` | 1920×1080, ~22 MB | explainer video, has audio |
+| `indoor_*`, `outdoor_*` | 1080×960 | side-by-side ASD vs. best baseline, labels burned in |
+| `multistage_*` | 720×1280, 640×1138 | portrait, prompt and success rate burned in |
+| `steer/*` | 720×810 | portrait phone clips, no audio |
+
+The steerability clips were cut from 720×1280 `.MOV` recordings: each is
+trimmed to ~0.5 s before the robot starts moving and ~0.6 s after it stops, and
+all eight share one crop so the scene lines up when switching prompts:
+
+```bash
+ffmpeg -ss <start> -to <end> -i <clip>.MOV -an \
+  -vf crop=720:810:0:310 \
+  -c:v libx264 -preset slow -crf 24 -pix_fmt yuv420p -movflags +faststart \
+  assets/video/steer/<group>_<key>.mp4
+```
+
+The crop removes the ceiling and the floor reflection below the robot's start
+position; going lower would cut the robot's wheels in the `direction_*` clips.
 
 ## Still to fill in
 
