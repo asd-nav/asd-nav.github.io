@@ -81,6 +81,30 @@
     })();
 
     /* ------------------------------------------------------------------
+     * Explainer video: autoplay muted once it scrolls into view (the clip
+     * opens on a fade from black, so the poster covers that), pause when
+     * it leaves. A manual pause by the viewer is respected until they
+     * press play again.
+     * ------------------------------------------------------------------ */
+    (function explainerAutoplay() {
+        const v = document.getElementById('explainer-video');
+        if (!v || reduceMotion) return;
+        let userPaused = false;
+        let autoPausing = false;
+        v.addEventListener('pause', () => { if (!autoPausing && !v.ended) userPaused = true; autoPausing = false; });
+        v.addEventListener('play', () => { userPaused = false; });
+        const io = new IntersectionObserver(([e]) => {
+            if (e.isIntersecting) {
+                if (!userPaused && !v.ended) v.play().catch(() => {});
+            } else if (!v.paused) {
+                autoPausing = true;
+                v.pause();
+            }
+        }, { threshold: 0.5 });
+        io.observe(v);
+    })();
+
+    /* ------------------------------------------------------------------
      * Videos: load only when near the viewport; autoplay muted and loop
      * (each clip plays through), pause off-screen and resume when back.
      * The wall autoplays even under reduced motion (a deliberate choice);
