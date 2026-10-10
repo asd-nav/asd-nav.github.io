@@ -83,16 +83,17 @@
     /* ------------------------------------------------------------------
      * Videos: load only when near the viewport; autoplay muted and loop
      * (each clip plays through), pause off-screen and resume when back.
+     * The wall autoplays even under reduced motion (a deliberate choice);
+     * click or Space/Enter still pauses any clip.
      * ------------------------------------------------------------------ */
     (function lazyVideos() {
         const videos = Array.from(document.querySelectorAll('video[data-src]'));
-        if (reduceMotion) videos.forEach(v => { v.controls = true; });
 
         const io = new IntersectionObserver(entries => {
             for (const { target: v, isIntersecting } of entries) {
                 if (isIntersecting) {
                     if (!v.src) { v.src = v.dataset.src; v.preload = 'auto'; }
-                    if (!reduceMotion) v.play().catch(() => {});
+                    v.play().catch(() => {});
                 } else if (!v.paused) {
                     v.pause();
                 }
@@ -104,7 +105,6 @@
             // No visible controls on the looping clips, so a click (or Space/Enter) toggles playback.
             const toggle = () => { if (v.paused) v.play().catch(() => {}); else v.pause(); };
             v.addEventListener('click', toggle);
-            if (reduceMotion) return;
             v.tabIndex = 0;
             v.addEventListener('keydown', e => {
                 if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); }
@@ -220,7 +220,8 @@
      * Clips live at assets/video/steer/<group>_<key>.mp4. A missing clip
      * shows a placeholder, so new files only need to be dropped in.
      * Two stacked <video>s crossfade: the next clip loads into the hidden
-     * one and fades in once it has data.
+     * one and fades in once it has data. Like the wall, it autoplays and
+     * loops even under reduced motion (a deliberate choice).
      * ------------------------------------------------------------------ */
     const STEER = {
         object: [
@@ -254,8 +255,6 @@
         let front = vids[0];
         let token = 0;
         let inView = false;
-
-        if (reduceMotion) vids.forEach(v => { v.controls = true; });
 
         function showPlaceholder(item, src) {
             screen.hidden = true;
@@ -299,7 +298,7 @@
                 cap.textContent = item.prompt;
                 v.currentTime = 0;
                 bringToFront(v);
-                if (!reduceMotion && inView) v.play().catch(() => {});
+                if (inView) v.play().catch(() => {});
             };
             v.onerror = () => { if (mine === token) showPlaceholder(item, src); };
             v.poster = 'assets/images/posters/steer_' + group + '_' + item.key + '.jpg';
@@ -319,7 +318,6 @@
         // Only play while the stage is on screen.
         new IntersectionObserver(([e]) => {
             inView = e.isIntersecting;
-            if (reduceMotion) return;
             if (inView) front.play().catch(() => {}); else front.pause();
         }, { threshold: 0.2 }).observe(root);
 

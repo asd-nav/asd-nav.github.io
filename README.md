@@ -5,13 +5,14 @@ contains only the website, with no shared history with `main`.
 
 ## Viewing it
 
-The page uses relative paths and no build step, but it must be served over HTTP
-rather than opened as a `file://` URL — browsers block video playback and some
-asset loads otherwise.
+Live at <https://rsd-nav.github.io/>, served by GitHub Pages from the `main`
+branch of [`rsd-nav/rsd-nav.github.io`](https://github.com/rsd-nav/rsd-nav.github.io).
+`.nojekyll` makes Pages publish the files as-is (no Jekyll build).
+
+To preview locally, serve the folder over HTTP rather than opening it as a
+`file://` URL (browsers block video playback and some asset loads otherwise):
 
 ```bash
-git clone -b website-v2 https://github.com/fengb2-coder/self-distilled-reasoning-planning site
-cd site
 python3 -m http.server 8000
 ```
 
@@ -20,6 +21,15 @@ Then open <http://localhost:8000>.
 `python3 -m http.server` does not support HTTP range requests, so the explainer
 video cannot be scrubbed locally (and may not play in Safari). This is a
 limitation of the local server only; GitHub Pages serves it normally.
+
+## Deploying
+
+Commit on `websitev3`, then push it to the Pages repo's `main`; the site
+updates within a minute or two:
+
+```bash
+git push pages websitev3:main   # remote "pages" = https://github.com/rsd-nav/rsd-nav.github.io.git
+```
 
 ## Layout
 

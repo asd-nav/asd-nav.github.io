@@ -475,7 +475,7 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; }
 .composites {
     margin-top: 44px;
     display: grid;
-    grid-template-columns: 2.759fr 4.065fr;
+    grid-template-columns: 2.920fr 4.065fr;
     gap: 18px;
     align-items: start;
 }
@@ -1161,7 +1161,7 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; }
 .method-figs {
     margin-top: 56px;
     display: grid;
-    grid-template-columns: 2.445fr 2.591fr;
+    grid-template-columns: 2.433fr 2.553fr;
     gap: 20px;
     align-items: start;
 }
@@ -1172,21 +1172,30 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; }
 
 /* ---------- Steerability ---------- */
 
+/* Stacked: prompt picker on top, the rollout centred below it. */
 .steer {
     margin: 44px auto 0;
     max-width: 1320px;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 56px;
+    gap: 28px;
+}
+
+.steer-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
 }
 
 .steer-tabs .seg-btn { padding: 9px 20px; font-size: 0.98rem; }
 
 .steer-prompts {
-    margin-top: 22px;
+    margin-top: 18px;
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 12px;
 }
 
@@ -1195,7 +1204,7 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; }
     font-family: 'JetBrains Mono', monospace;
     font-size: 1rem;
     text-align: left;
-    padding: 16px 20px 16px 22px;
+    padding: 14px 20px;
     border: 1.5px solid var(--rule);
     border-radius: 12px;
     color: var(--ink-2);
@@ -1207,26 +1216,28 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; }
 .steer-prompt::before { content: "\201C"; }
 .steer-prompt::after { content: "\201D"; }
 
-.steer-prompt:hover { border-color: #f3b670; transform: translateX(4px); }
+.steer-prompt:hover { border-color: #f3b670; transform: translateY(-2px); }
 
 .steer-prompt.is-active {
     color: var(--accent-text);
     border-color: var(--accent);
     background: var(--accent-soft);
-    box-shadow: inset 4px 0 0 var(--accent), 0 0 0 4px rgba(231, 117, 0, 0.12), 0 12px 28px -16px var(--accent-glow);
-    transform: translateX(4px);
+    box-shadow: inset 0 -3px 0 var(--accent), 0 0 0 4px rgba(231, 117, 0, 0.12), 0 12px 28px -16px var(--accent-glow);
+    transform: translateY(-2px);
 }
 
 .steer-stage {
     display: flex;
     justify-content: center;
+    width: 100%;
 }
 
-/* Clips are 8:9 portrait: size by height so the whole frame stays on screen.
-   Two stacked videos crossfade via .is-on. */
+/* Clips are 8:9 portrait: size by height so the picker above and the whole
+   frame fit on screen together. Two stacked videos crossfade via .is-on. */
 .steer-screen {
     position: relative;
-    height: min(80vh, 780px);
+    height: clamp(360px, calc(100vh - 240px), 700px);
+    height: clamp(360px, calc(100svh - 240px), 700px);
     max-width: 100%;
     aspect-ratio: 8 / 9;
     overflow: hidden;
@@ -1289,9 +1300,20 @@ code { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; }
 
 .steer-stage .placeholder { width: min(540px, 100%); aspect-ratio: 8 / 9; }
 
+/* Color / direction / object composites side by side, stacked on phones. */
+.steer-strip {
+    display: grid;
+    grid-template-columns: 496fr 742fr 743fr;
+    gap: 14px;
+    align-items: start;
+}
+
+@media (max-width: 640px) {
+    .steer-strip { grid-template-columns: 1fr; gap: 10px; }
+}
+
 @media (max-width: 860px) {
-    .steer { grid-template-columns: 1fr; gap: 24px; }
-    .steer-tabs { margin: 0 auto; }
+    .steer { gap: 24px; }
     .steer-screen { height: auto; width: 100%; max-width: 520px; margin: 0 auto; }
 }
 
@@ -1592,6 +1614,7 @@ table.results-table.narrow { max-width: 520px; }
     .placeholder-fill { aspect-ratio: auto; min-height: 220px; }
     .seg-btn { padding: 7px 13px; font-size: 0.88rem; }
     .steer-tabs .seg-btn { padding: 8px 14px; font-size: 0.9rem; }
+    .steer-prompts { flex-direction: column; align-self: stretch; }
     .steer-prompt { font-size: 0.9rem; padding: 13px 16px; }
 }
 
@@ -1599,6 +1622,4 @@ table.results-table.narrow { max-width: 520px; }
     html { scroll-behavior: auto; }
     *, *::before, *::after { transition: none !important; animation: none !important; }
     .reveal { opacity: 1; }
-    /* Clips show native controls here, so lift the label chip off the control bar. */
-    .vid-cap { top: 10px; bottom: auto; }
 }
