@@ -77,7 +77,7 @@ in this branch.
 
 | Clips | Size | Notes |
 |---|---|---|
-| `ASD_full_3m21s.mp4` | 1920×1080, ~22 MB | explainer video, has audio |
+| `ASD_teaser_60s.mp4` | 1920×1080, ~9 MB | 60 s teaser video (no audio) |
 | `indoor_*`, `outdoor_*` | 1080×960 | side-by-side ASD vs. best baseline, labels burned in |
 | `multistage_*` | 720×1280, 640×1138 | portrait, prompt and success rate burned in |
 | `steer/*` | 720×810 | portrait phone clips, no audio |
