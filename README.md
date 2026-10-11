@@ -5,9 +5,11 @@ contains only the website, with no shared history with `main`.
 
 ## Viewing it
 
-Live at <https://rsd-nav.github.io/>, served by GitHub Pages from the `main`
-branch of [`rsd-nav/rsd-nav.github.io`](https://github.com/rsd-nav/rsd-nav.github.io).
-`.nojekyll` makes Pages publish the files as-is (no Jekyll build).
+Will be served at <https://asd-nav.github.io/> by GitHub Pages from the `main`
+branch of [`asd-nav/asd-nav.github.io`](https://github.com/asd-nav/asd-nav.github.io).
+That repo is private and Pages is off until the site is made public (the org is
+on the Free plan, so Pages needs a public repo). `.nojekyll` makes Pages publish
+the files as-is (no Jekyll build).
 
 To preview locally, serve the folder over HTTP rather than opening it as a
 `file://` URL (browsers block video playback and some asset loads otherwise):
@@ -28,7 +30,7 @@ Commit on `websitev3`, then push it to the Pages repo's `main`; the site
 updates within a minute or two:
 
 ```bash
-git push pages websitev3:main   # remote "pages" = https://github.com/rsd-nav/rsd-nav.github.io.git
+git push pages websitev3:main   # remote "pages" = https://github.com/asd-nav/asd-nav.github.io.git
 ```
 
 ## Layout
