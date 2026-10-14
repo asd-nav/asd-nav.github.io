@@ -46,10 +46,10 @@ assets/video/steer/     steerability rollouts, <group>_<target>.mp4
 ```
 
 Page order: dark hero (title, authors, links; muted background clip) →
+overview (explainer video, TL;DR, headline stats, highlights) → Method
+(animated teacher → student → deploy explainer, then the static figures) →
 Real-World video wall (all indoor / outdoor / multi-stage clips, filterable,
-plus rollout composites) → overview (explainer video, TL;DR, headline stats,
-highlights) → Method (animated teacher → student → deploy explainer, then the
-static figures) → Steerability → Reasoning → Results → BibTeX. A sticky nav
+plus rollout composites) → Steerability → Reasoning → Results → BibTeX. A sticky nav
 bar appears once the hero is scrolled past. The page follows the system
 light/dark setting; the hero, video wall and method sections are always dark.
 

@@ -32,9 +32,9 @@
         <div class="topnav-inner">
             <a class="topnav-brand" href="#top" aria-label="Back to top"><span class="brand-dot" aria-hidden="true"></span>ASD</a>
             <ul class="topnav-links">
-                <li><a href="#real-world">Real-World</a></li>
                 <li><a href="#video">Video</a></li>
                 <li><a href="#method">Method</a></li>
+                <li><a href="#real-world">Real-World</a></li>
                 <li><a href="#steerability">Steerability</a></li>
                 <li><a href="#reasoning">Reasoning</a></li>
                 <li><a href="#results">Results</a></li>
@@ -81,65 +81,6 @@
     </header>
 
     <main id="main">
-
-    <!-- ================= Real-world video wall =================
-         All eight clips autoplay muted and loop (each plays through to its end);
-         main.js pauses off-screen clips and resumes them when back in view.
-         Grid: the two portrait multi-stage clips flank 2 rows x 3 landscape clips. -->
-    <section class="section section-dark wall-section" id="real-world">
-        <div class="wrap wrap-wide">
-            <div class="wall-head">
-                <div>
-                    <p class="eyebrow eyebrow-left">Zero-shot on a FrodoBot rover</p>
-                    <h2 class="section-title section-title-left">Real-World Experiments</h2>
-                </div>
-                <div class="seg wall-filter" role="group" aria-label="Highlight clips by setting" hidden>
-                    <button class="seg-btn is-active" type="button" data-filter="all" aria-pressed="true">All</button>
-                    <button class="seg-btn" type="button" data-filter="indoor" aria-pressed="false"><i class="fas fa-building" aria-hidden="true"></i> Indoor</button>
-                    <button class="seg-btn" type="button" data-filter="outdoor" aria-pressed="false"><i class="fas fa-tree" aria-hidden="true"></i> Outdoor</button>
-                    <button class="seg-btn" type="button" data-filter="multistage" aria-pressed="false"><i class="fas fa-layer-group" aria-hidden="true"></i> Multi-Stage</button>
-                </div>
-            </div>
-
-            <div class="wall" id="wall" data-filter="all">
-                <!-- Old deep links #indoor / #outdoor / #multistage land here and pick the matching filter. -->
-                <span class="wall-anchor" id="indoor"></span><span class="wall-anchor" id="outdoor"></span><span class="wall-anchor" id="multistage"></span>
-
-                <figure class="video-item portrait wall-left" data-kind="multistage">
-                    <video muted loop playsinline preload="none" data-src="assets/video/multistage_hallway.mp4" poster="assets/images/posters/multistage_hallway.jpg" aria-label="Multi-stage hallway task rollout"></video>
-                    <figcaption class="vid-cap"><span class="vid-kind">Multi-stage</span> Hallway (multi-stage)</figcaption>
-                </figure>
-                <figure class="video-item portrait wall-right" data-kind="multistage">
-                    <video muted loop playsinline preload="none" data-src="assets/video/multistage_sidewalk.mp4" poster="assets/images/posters/multistage_sidewalk.jpg" aria-label="Multi-stage sidewalk task rollout"></video>
-                    <figcaption class="vid-cap"><span class="vid-kind">Multi-stage</span> Sidewalk (multi-stage)</figcaption>
-                </figure>
-
-                <figure class="video-item" data-kind="indoor"><video muted loop playsinline preload="none" data-src="assets/video/indoor_chair_right.mp4" poster="assets/images/posters/indoor_chair_right.jpg" aria-label="Right chair task rollout"></video><figcaption class="vid-cap"><span class="vid-kind">Indoor</span> Right chair</figcaption></figure>
-                <figure class="video-item" data-kind="indoor"><video muted loop playsinline preload="none" data-src="assets/video/indoor_monitor.mp4" poster="assets/images/posters/indoor_monitor.jpg" aria-label="Monitor task rollout"></video><figcaption class="vid-cap"><span class="vid-kind">Indoor</span> Monitor</figcaption></figure>
-                <figure class="video-item" data-kind="indoor"><video muted loop playsinline preload="none" data-src="assets/video/indoor_chair.mp4" poster="assets/images/posters/indoor_chair.jpg" aria-label="Chair task rollout"></video><figcaption class="vid-cap"><span class="vid-kind">Indoor</span> Chair</figcaption></figure>
-                <figure class="video-item" data-kind="outdoor"><video muted loop playsinline preload="none" data-src="assets/video/outdoor_statue.mp4" poster="assets/images/posters/outdoor_statue.jpg" aria-label="Statue task rollout"></video><figcaption class="vid-cap"><span class="vid-kind">Outdoor</span> Statue</figcaption></figure>
-                <figure class="video-item" data-kind="outdoor"><video muted loop playsinline preload="none" data-src="assets/video/outdoor_car.mp4" poster="assets/images/posters/outdoor_car.jpg" aria-label="Car task rollout"></video><figcaption class="vid-cap"><span class="vid-kind">Outdoor</span> Car</figcaption></figure>
-                <figure class="video-item" data-kind="outdoor"><video muted loop playsinline preload="none" data-src="assets/video/outdoor_tree.mp4" poster="assets/images/posters/outdoor_tree.jpg" aria-label="Tree task rollout"></video><figcaption class="vid-cap"><span class="vid-kind">Outdoor</span> Tree</figcaption></figure>
-            </div>
-
-            <p class="wall-note">Indoor and outdoor clips run ASD side by side with the best baseline; the prompt and success
-                rate are shown in each clip. Click a clip to pause it.</p>
-
-            <!-- Rollout composites; column widths follow the image aspect ratios so both rows match in height. -->
-            <div class="composites">
-                <figure class="figure">
-                    <img src="assets/images/filmstrip.webp" loading="lazy" width="2000" height="685"
-                         alt="Five time-lapse composites of the rover approaching boxed targets: a blue chair and a monitor indoors, and a red car, a statue and a tree outdoors.">
-                    <figcaption>Rollout composites on two indoor (left) and three outdoor (right) tasks; the box marks the target.</figcaption>
-                </figure>
-                <figure class="figure">
-                    <img src="assets/images/multistage.webp" loading="lazy" width="2000" height="492"
-                         alt="Frame sequences of the two multi-stage rollouts. Top: navigate through the door, turn right, then go along the hallway. Bottom: navigate right to the sidewalk, and navigate along the sidewalk.">
-                    <figcaption>Frames from the two multi-stage rollouts.</figcaption>
-                </figure>
-            </div>
-        </div>
-    </section>
 
     <!-- ================= Overview: explainer video, TL;DR, highlights ================= -->
     <section class="section overview" id="video">
@@ -352,6 +293,65 @@
                          alt="Training pipeline. Top: the Self-Teacher VLM (Qwen3.5-VL-9B) takes the GT trajectory, a self-teacher prompt and the image with the path drawn on it, and outputs a goal, perception and plan. Bottom: the Student VLM (Qwen3.5-VL-9B) takes the raw image, a student prompt and the extracted goal, and outputs perception, plan and trajectory. A KL term matches the student's reasoning to the teacher's, a CE term fits its trajectory to the GT, and an EMA link connects the two VLMs.">
                     <figcaption>Training overview. The self-teacher (top) sees the demonstrated (GT) trajectory and extracts the
                         goal and reasoning; the student (bottom) sees only the image, its prompt, and the extracted goal.</figcaption>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= Real-world video wall =================
+         All eight clips autoplay muted and loop (each plays through to its end);
+         main.js pauses off-screen clips and resumes them when back in view.
+         Grid: the two portrait multi-stage clips flank 2 rows x 3 landscape clips. -->
+    <section class="section section-dark wall-section" id="real-world">
+        <div class="wrap wrap-wide">
+            <div class="wall-head">
+                <div>
+                    <p class="eyebrow eyebrow-left">Zero-shot on a FrodoBot rover</p>
+                    <h2 class="section-title section-title-left">Real-World Experiments</h2>
+                </div>
+                <div class="seg wall-filter" role="group" aria-label="Highlight clips by setting" hidden>
+                    <button class="seg-btn is-active" type="button" data-filter="all" aria-pressed="true">All</button>
+                    <button class="seg-btn" type="button" data-filter="indoor" aria-pressed="false"><i class="fas fa-building" aria-hidden="true"></i> Indoor</button>
+                    <button class="seg-btn" type="button" data-filter="outdoor" aria-pressed="false"><i class="fas fa-tree" aria-hidden="true"></i> Outdoor</button>
+                    <button class="seg-btn" type="button" data-filter="multistage" aria-pressed="false"><i class="fas fa-layer-group" aria-hidden="true"></i> Multi-Stage</button>
+                </div>
+            </div>
+
+            <div class="wall" id="wall" data-filter="all">
+                <!-- Old deep links #indoor / #outdoor / #multistage land here and pick the matching filter. -->
+                <span class="wall-anchor" id="indoor"></span><span class="wall-anchor" id="outdoor"></span><span class="wall-anchor" id="multistage"></span>
+
+                <figure class="video-item portrait wall-left" data-kind="multistage">
+                    <video muted loop playsinline preload="none" data-src="assets/video/multistage_hallway.mp4" poster="assets/images/posters/multistage_hallway.jpg" aria-label="Multi-stage hallway task rollout"></video>
+                    <figcaption class="vid-cap"><span class="vid-kind">Multi-stage</span> Hallway (multi-stage)</figcaption>
+                </figure>
+                <figure class="video-item portrait wall-right" data-kind="multistage">
+                    <video muted loop playsinline preload="none" data-src="assets/video/multistage_sidewalk.mp4" poster="assets/images/posters/multistage_sidewalk.jpg" aria-label="Multi-stage sidewalk task rollout"></video>
+                    <figcaption class="vid-cap"><span class="vid-kind">Multi-stage</span> Sidewalk (multi-stage)</figcaption>
+                </figure>
+
+                <figure class="video-item" data-kind="indoor"><video muted loop playsinline preload="none" data-src="assets/video/indoor_chair_right.mp4" poster="assets/images/posters/indoor_chair_right.jpg" aria-label="Right chair task rollout"></video><figcaption class="vid-cap"><span class="vid-kind">Indoor</span> Right chair</figcaption></figure>
+                <figure class="video-item" data-kind="indoor"><video muted loop playsinline preload="none" data-src="assets/video/indoor_monitor.mp4" poster="assets/images/posters/indoor_monitor.jpg" aria-label="Monitor task rollout"></video><figcaption class="vid-cap"><span class="vid-kind">Indoor</span> Monitor</figcaption></figure>
+                <figure class="video-item" data-kind="indoor"><video muted loop playsinline preload="none" data-src="assets/video/indoor_chair.mp4" poster="assets/images/posters/indoor_chair.jpg" aria-label="Chair task rollout"></video><figcaption class="vid-cap"><span class="vid-kind">Indoor</span> Chair</figcaption></figure>
+                <figure class="video-item" data-kind="outdoor"><video muted loop playsinline preload="none" data-src="assets/video/outdoor_statue.mp4" poster="assets/images/posters/outdoor_statue.jpg" aria-label="Statue task rollout"></video><figcaption class="vid-cap"><span class="vid-kind">Outdoor</span> Statue</figcaption></figure>
+                <figure class="video-item" data-kind="outdoor"><video muted loop playsinline preload="none" data-src="assets/video/outdoor_car.mp4" poster="assets/images/posters/outdoor_car.jpg" aria-label="Car task rollout"></video><figcaption class="vid-cap"><span class="vid-kind">Outdoor</span> Car</figcaption></figure>
+                <figure class="video-item" data-kind="outdoor"><video muted loop playsinline preload="none" data-src="assets/video/outdoor_tree.mp4" poster="assets/images/posters/outdoor_tree.jpg" aria-label="Tree task rollout"></video><figcaption class="vid-cap"><span class="vid-kind">Outdoor</span> Tree</figcaption></figure>
+            </div>
+
+            <p class="wall-note">Indoor and outdoor clips run ASD side by side with the best baseline; the prompt and success
+                rate are shown in each clip. Click a clip to pause it.</p>
+
+            <!-- Rollout composites; column widths follow the image aspect ratios so both rows match in height. -->
+            <div class="composites">
+                <figure class="figure">
+                    <img src="assets/images/filmstrip.webp" loading="lazy" width="2000" height="685"
+                         alt="Five time-lapse composites of the rover approaching boxed targets: a blue chair and a monitor indoors, and a red car, a statue and a tree outdoors.">
+                    <figcaption>Rollout composites on two indoor (left) and three outdoor (right) tasks; the box marks the target.</figcaption>
+                </figure>
+                <figure class="figure">
+                    <img src="assets/images/multistage.webp" loading="lazy" width="2000" height="492"
+                         alt="Frame sequences of the two multi-stage rollouts. Top: navigate through the door, turn right, then go along the hallway. Bottom: navigate right to the sidewalk, and navigate along the sidewalk.">
+                    <figcaption>Frames from the two multi-stage rollouts.</figcaption>
                 </figure>
             </div>
         </div>
